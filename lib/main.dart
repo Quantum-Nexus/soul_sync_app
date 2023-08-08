@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:soul_sync_app/Screens/Home/home.dart';
 import 'package:soul_sync_app/Screens/LoginScreen/signup_screen.dart';
 import 'package:soul_sync_app/Screens/SplashScreen/splash_screen.dart';
+import 'package:soul_sync_app/utils/constants/color.dart';
 
 import 'Screens/LoginScreen/login_screen.dart';
+import 'Screens/Onboarding/onboarding.dart';
+import 'Screens/SplashScreen/splash_screen.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -15,14 +18,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SoulSync',
+
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        primarySwatch: kPrimarySwatch,
       ),
+
       debugShowCheckedModeBanner: false,
-      initialRoute: '/login',
+      initialRoute: '/onboarding',
       routes: {
         '/home': (context) => const Home(),
+        '/onboarding': (context) => const OnboardingScreen(),
         '/splash': (context) => const SplashScreen(),
         //'/feed': (context) => const FeedScreen(),
         '/login': (context) => const LoginScreen(),
