@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:soul_sync_app/Screens/Home/home.dart';
+import 'package:soul_sync_app/utils/constants/color.dart';
+import 'Screens/LoginScreen/login_screen.dart';
+import 'Screens/SplashScreen/splash_screen.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -10,11 +15,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SoulSync',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
       debugShowCheckedModeBanner: false,
+      routes: {
+        '/home': (context) => const Home(),
+        '/splash': (context) => const SplashScreen(),
+        '/login': (context) => const LoginScreen(),
+      },
+      initialRoute: '/home',
     );
   }
 }

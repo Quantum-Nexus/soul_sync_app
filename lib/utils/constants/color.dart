@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 //--------------------C O L O R S--------------------
 
 // This is the primary color of the application
