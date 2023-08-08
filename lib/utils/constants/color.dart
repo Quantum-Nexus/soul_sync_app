@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 //--------------------C O L O R S--------------------
 
 // This is the primary color of the application
-const Color kPrimaryColor = Color(0x0027374D);
-const Color kPrimaryLightColor = Color(0x00DDE6ED);
+const Color kPrimaryColor = Color(0xff27374D);
+const Color kPrimaryLightColor = Color(0xffDDE6ED);
 
 // This is the secondary color of the application
-const Color kSecondaryColor = Color(0x00526D82);
-const Color kSecondaryLightColor = Color(0x009DB2BF);
+const Color kSecondaryColor = Color(0xff526D82);
+const Color kSecondaryLightColor = Color(0xff9DB2BF);
 
 // This is the background color of the application
 const Color kBackgroundColor = kPrimaryColor;

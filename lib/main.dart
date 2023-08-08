@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:soul_sync_app/Screens/Home/home.dart';
+import 'package:soul_sync_app/Screens/SplashScreen/splash_screen.dart';
+
+import 'Screens/LoginScreen/login_screen.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -15,6 +19,15 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
+      initialRoute: '/login',
+      routes: {
+        '/home': (context) => const Home(),
+        '/splash': (context) => const SplashScreen(),
+        //'/feed': (context) => const FeedScreen(),
+        '/login': (context) => const LoginScreen(),
+        //'/timetable': (context) => const TimetableHome(),
+        //'/notification': (context) => const NotificationScreen(),
+      },
     );
   }
 }
