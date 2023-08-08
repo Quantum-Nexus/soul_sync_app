@@ -4,6 +4,9 @@ import 'package:soul_sync_app/utils/constants/color.dart';
 import 'Screens/LoginScreen/login_screen.dart';
 import 'Screens/SplashScreen/splash_screen.dart';
 
+import 'package:soul_sync_app/Screens/SplashScreen/splash_screen.dart';
+
+import 'Screens/LoginScreen/login_screen.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -16,12 +19,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'SoulSync',
       debugShowCheckedModeBanner: false,
+      initialRoute: '/login',
       routes: {
         '/home': (context) => const Home(),
         '/splash': (context) => const SplashScreen(),
+        //'/feed': (context) => const FeedScreen(),
         '/login': (context) => const LoginScreen(),
+        //'/timetable': (context) => const TimetableHome(),
+        //'/notification': (context) => const NotificationScreen(),
       },
-      initialRoute: '/home',
     );
   }
 }
