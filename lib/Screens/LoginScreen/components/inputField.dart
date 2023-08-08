@@ -31,7 +31,7 @@ class _InputFieldState extends State<InputField> {
             controller: widget.emailcontroller ,
             decoration: InputDecoration(
               hintText: 'Email',
-              fillColor: kPrimaryColor,
+              fillColor: kSecondaryLightColor,
               filled: true,
               prefixIcon: const Icon(
                 Icons.email,

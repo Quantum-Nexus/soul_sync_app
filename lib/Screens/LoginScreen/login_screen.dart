@@ -28,17 +28,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.all(70.0),
                 child: Text(
                   'Soul Sync',
-                  //style: kLogoStyle,
+                  style: kLogoStyle,
                 ),
               ),
-              SizedBox(height: 20,),
+             // SizedBox(height: 10,),
               const Center(
                   child: Text(
                     'Login',
                     style: TextStyle(
                         fontSize: 24,
                         fontFamily: 'Rubik Medium',
-                        color: kPrimaryColor
+                        color: kSecondaryLightColor
                     ),
                   )),
               const Center(
@@ -49,11 +49,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                           fontSize: 16,
                           fontFamily: 'Rubik Regular',
-                          color: kSecondaryColor),
+                          color: kTextColor),
                     ),
                   )),
               Padding(
-                padding: const EdgeInsets.only(top: 50.0),
+                padding: const EdgeInsets.only(top: 30.0),
                 child: InputField(
                   passwordcontroller: passwordController,
                   emailcontroller: emailController,),
@@ -68,8 +68,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         fontFamily: 'Rubik Regular',
-                        color: kSecondaryColor,
-                        decoration: TextDecoration.underline,
+                        color: kSecondaryLightColor,
+                        //decoration: TextDecoration.underline,
                       ),
                     ),
                   ),
@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: 300,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: kPrimaryColor,
+                    color: kSecondaryLightColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Center(
@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                         fontFamily: 'Rubik Regular',
                         fontSize: 20,
-                        color: kSecondaryColor,
+                        color: kPrimaryColor,
                       ),
                     ),
                   ),
@@ -112,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                           fontSize: 16,
                           fontFamily: 'Rubik Regular',
-                          color: kPrimaryColor),
+                          color: kSecondaryLightColor),
                     ),
                     GestureDetector(
                       onTap: widget.onTap,

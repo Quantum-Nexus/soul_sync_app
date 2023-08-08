@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 //--------------------C O L O R S--------------------
 
@@ -27,4 +28,23 @@ const LinearGradient kPrimaryGradientColor = LinearGradient(
     Color(0xFF1976D2),
     Color(0xFF42A5F5),
   ],
+);
+
+//--------------------------S T Y L E S-----------------------
+
+TextStyle kHeadingStyle = GoogleFonts.playfairDisplay(
+     fontSize:24,
+     fontWeight: FontWeight.w800
+);
+
+TextStyle kDescriptionStyle = GoogleFonts.inconsolata(
+    fontSize:24,
+    fontWeight: FontWeight.w800
+);
+
+TextStyle kLogoStyle = GoogleFonts.lobster(
+    fontSize:52,
+    fontWeight: FontWeight.w600,
+  color: kSecondaryLightColor
+
 );
