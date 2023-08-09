@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:soul_sync_app/Screens/Home/home.dart';
+import 'package:soul_sync_app/Screens/LoginScreen/components/otp_screen.dart';
 import 'package:soul_sync_app/Screens/LoginScreen/signup_screen.dart';
 import 'package:soul_sync_app/Screens/SplashScreen/splash_screen.dart';
 import 'package:soul_sync_app/utils/constants/color.dart';
@@ -24,12 +25,12 @@ class MyApp extends StatelessWidget {
       ),
 
       debugShowCheckedModeBanner: false,
-      initialRoute: '/onboarding',
+      initialRoute: '/otp',
       routes: {
         '/home': (context) => const Home(),
         '/onboarding': (context) => const OnboardingScreen(),
         '/splash': (context) => const SplashScreen(),
-        //'/feed': (context) => const FeedScreen(),
+        '/otp': (context) => OTPScreen(),
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignupScreen(),
         //'/timetable': (context) => const TimetableHome(),
