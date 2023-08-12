@@ -1,11 +1,15 @@
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-
+import 'package:soul_sync_app/Screens/LoginScreen/signup_screen.dart';
 import '../../utils/constants/color.dart';
+import '../Home/home.dart';
 import 'components/inputField.dart';
 
+
 class LoginScreen extends StatefulWidget {
-  final void Function()? onTap;
-  const LoginScreen({super.key, this.onTap});
+  const LoginScreen({super.key,});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -14,6 +18,62 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  //final storage = const FlutterSecureStorage();
+
+  
+
+  void signIn() async {
+
+     const url ='http://localhost:4000/api/v1/auth/login'; // Replace with your actual API endpoint
+
+  final response = await http.post(
+    Uri.parse(url),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({
+      'email': emailController.text,
+      'password': passwordController.text,
+      
+    }),
+    
+  );
+
+  print(response);
+  
+    if (response.statusCode == 200) {
+      showDialog(context: context, builder: (context){
+      return Center(
+        child: CircularProgressIndicator(color: kSecondaryColor),
+      );
+    });
+    final responseBody = json.decode(response.body);
+    final jwtToken = responseBody['token'];
+
+    // Store the JWT token securely
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('jwt_token', jwtToken);
+
+      Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const Home()));
+
+  } else{
+    final responseBody = json.decode(response.body);
+    if (responseBody.containsKey('message')) {
+      final errorMessage = responseBody['message'];
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorMessage)),
+        );
+    }    
+    
+  }
+
+    
+  }
+  @override
+  void dispose() {
+    emailController.dispose();
+    //passwordController.dispose();
+    super.dispose();
+  }
 
   
   @override
@@ -58,11 +118,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   passwordcontroller: passwordController,
                   emailcontroller: emailController,),
               ),
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(right: 30.0),
+                    padding: EdgeInsets.only(right: 30.0),
                     child: Text(
                       'Forgot Password?',
                       style: TextStyle(
@@ -80,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               GestureDetector(
                 onTap: (){
-                  //signIn();
+                  signIn();
                 },
                 child: Container(
                   width: 300,
@@ -107,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:  [
-                    Text(
+                    const Text(
                       'Dont have an account?',
                       style: TextStyle(
                           fontSize: 16,
@@ -115,8 +175,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: kSecondaryLightColor),
                     ),
                     GestureDetector(
-                      onTap: widget.onTap,
-                      child: Text(
+                      onTap: (){
+                        Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const SignupScreen()));
+                      },
+                      child: const Text(
                         ' Signup',
                         style: TextStyle(
                             fontSize: 16,

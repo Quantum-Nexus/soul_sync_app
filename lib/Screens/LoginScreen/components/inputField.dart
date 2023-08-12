@@ -1,26 +1,44 @@
 import 'package:flutter/material.dart';
-
 import '../../../utils/constants/color.dart';
-
-
 
 class InputField extends StatefulWidget {
   final TextEditingController emailcontroller;
   final TextEditingController passwordcontroller;
-  const InputField({Key? key, required this.passwordcontroller, required this.emailcontroller}) : super(key: key);
+  const InputField({
+    Key? key,
+    required this.passwordcontroller,
+    required this.emailcontroller,
+  }) : super(key: key);
 
   @override
   State<InputField> createState() => _InputFieldState();
 }
 
 class _InputFieldState extends State<InputField> {
-  bool passwordVisible=false;
+  bool passwordVisible = false;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    passwordVisible=true;
+    passwordVisible = true;
   }
+
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email is required';
+    }
+    // You can add additional email validation logic here if needed
+    return null;
+  }
+
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    }
+    // You can add additional password validation logic here if needed
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -28,7 +46,8 @@ class _InputFieldState extends State<InputField> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: TextFormField(
-            controller: widget.emailcontroller ,
+            controller: widget.emailcontroller,
+            validator: validateEmail, // Add validator
             decoration: InputDecoration(
               hintText: 'Email',
               fillColor: kSecondaryLightColor,
@@ -57,6 +76,7 @@ class _InputFieldState extends State<InputField> {
           child: TextFormField(
             controller: widget.passwordcontroller,
             obscureText: passwordVisible,
+            validator: validatePassword, // Add validator
             decoration: InputDecoration(
               hintText: 'Password',
               fillColor: kSecondaryLightColor,
@@ -68,10 +88,11 @@ class _InputFieldState extends State<InputField> {
               suffixIcon: IconButton(
                 icon: Icon(passwordVisible
                     ? Icons.visibility_off
-                    : Icons.visibility),color: kSecondaryColor,
+                    : Icons.visibility),
+                color: kSecondaryColor,
                 onPressed: () {
                   setState(
-                        () {
+                    () {
                       passwordVisible = !passwordVisible;
                     },
                   );

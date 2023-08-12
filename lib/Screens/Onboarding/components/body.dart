@@ -41,7 +41,7 @@ class Body extends StatelessWidget {
                           //fontFamily: 'Oswald',
                           fontSize: height * 0.0425,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 117, 194, 233)))
+                          color: const Color.fromARGB(255, 117, 194, 233)))
                 ]),
           ),
           Padding(
@@ -59,14 +59,14 @@ class Body extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: height * 0.04),
             child: GestureDetector(
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/login');
+                Navigator.pushReplacementNamed(context, '/signup');
               },
               child: Container(
                 height: height * 0.0550,
                 width: double.maxFinite,
                 alignment: AlignmentDirectional.center,
                 decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 117, 194, 233),
+                    color: const Color.fromARGB(255, 117, 194, 233),
                     borderRadius: BorderRadius.circular(25)),
                 child: Text(
                   'Join now',
