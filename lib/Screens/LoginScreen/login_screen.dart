@@ -23,8 +23,13 @@ class _LoginScreenState extends State<LoginScreen> {
   
 
   void signIn() async {
+    showDialog(context: context, builder: (context){
+      return Center(
+        child: CircularProgressIndicator(color: kSecondaryColor),
+      );
+    });
 
-     const url ='http://localhost:4000/api/v1/auth/login'; // Replace with your actual API endpoint
+     const url ='https://soulsync.onrender/api/v1/auth/login'; // Replace with your actual API endpoint
 
   final response = await http.post(
     Uri.parse(url),
@@ -33,18 +38,15 @@ class _LoginScreenState extends State<LoginScreen> {
       'email': emailController.text,
       'password': passwordController.text,
       
+      
     }),
-    
   );
-
+  
+  Navigator.pop(context);
   print(response);
   
     if (response.statusCode == 200) {
-      showDialog(context: context, builder: (context){
-      return Center(
-        child: CircularProgressIndicator(color: kSecondaryColor),
-      );
-    });
+      
     final responseBody = json.decode(response.body);
     final jwtToken = responseBody['token'];
 

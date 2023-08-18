@@ -12,8 +12,25 @@ class OTPScreen extends StatefulWidget {
   final String confirmController;
   final String firstNameController;
   final String lastNameController;
+  final String dateOfBirthController;
+  final String aboutController; 
+  final String contactNumberController; 
+  final String heightController;
+  final String instagramUsernameController;
+  final String graduationYearController;
 
-  const OTPScreen({Key? key, required this.emailController, required this.passwordController, required this.confirmController, required this.firstNameController, required this.lastNameController,  }) : super(key: key);
+  const OTPScreen({Key? key, 
+  required this.emailController, 
+  required this.passwordController, 
+  required this.confirmController, 
+  required this.firstNameController, 
+  required this.lastNameController, 
+  required this.dateOfBirthController, 
+  required this.aboutController, 
+  required this.contactNumberController, 
+  required this.heightController, 
+  required this.instagramUsernameController, 
+  required this.graduationYearController,  }) : super(key: key);
   @override
   _OTPScreenState createState() => _OTPScreenState();
 }
@@ -75,6 +92,13 @@ class _OTPScreenState extends State<OTPScreen> {
       'confirmPassword': widget.confirmController,
       'firstName': widget.firstNameController,
       'lastName': widget.lastNameController,
+      'dateOfBirth': widget.dateOfBirthController,
+      'about': widget.aboutController,
+      'contactNumber': widget.contactNumberController,
+      'height': widget.heightController,
+      'instagramUsername': widget.instagramUsernameController,
+      'graduationYear': widget.graduationYearController,
+      'gender': "Male",
       'otp': otp
     }),
     
