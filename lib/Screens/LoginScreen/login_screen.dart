@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     });
 
-     const url ='https://soulsync.onrender/api/v1/auth/login'; // Replace with your actual API endpoint
+     const url ='http://localhost:4000/api/v1/auth/login'; // Replace with your actual API endpoint
 
   final response = await http.post(
     Uri.parse(url),

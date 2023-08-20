@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       ),
 
       debugShowCheckedModeBanner: false,
-      initialRoute: '/signup', //isLoggedIn ? '/home' : '/splash',
+      initialRoute: '/home', //isLoggedIn ? '/home' : '/splash',
       routes: {
         '/home': (context) => const Home(),
         '/onboarding': (context) => const OnboardingScreen(),
