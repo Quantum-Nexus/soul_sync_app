@@ -57,8 +57,8 @@ const LinearGradient kPrimaryGradientColor = LinearGradient(
 //--------------------------S T Y L E S-----------------------
 
 TextStyle kHeadingStyle = GoogleFonts.playfairDisplay(
-     fontSize:24,
-     fontWeight: FontWeight.w800
+    fontSize:24,
+    fontWeight: FontWeight.w800
 );
 
 TextStyle kDescriptionStyle = GoogleFonts.inconsolata(
@@ -66,9 +66,34 @@ TextStyle kDescriptionStyle = GoogleFonts.inconsolata(
     fontWeight: FontWeight.w800
 );
 
-TextStyle kLogoStyle = GoogleFonts.lobster(
-    fontSize:52,
+TextStyle kLogoStyle = GoogleFonts.quicksand(
+    fontSize:26,
+    fontStyle: FontStyle.italic,
     fontWeight: FontWeight.w600,
   color: kSecondaryLightColor
+
+);
+TextStyle kNameStyle = GoogleFonts.roboto(
+    fontSize:50,
+    fontWeight: FontWeight.w500,
+  color: Colors.white
+
+);
+TextStyle kHeadStyle = GoogleFonts.quicksand(
+    fontSize:24,
+    fontWeight: FontWeight.w600,
+  color: Colors.white70
+
+);
+TextStyle kLeadingStyle = GoogleFonts.roboto(
+    fontSize:20,
+    fontWeight: FontWeight.w500,
+  color: Colors.white
+
+);
+TextStyle kAboutStyle = GoogleFonts.roboto(
+    fontSize:20,
+    fontWeight: FontWeight.w500,
+  color: Colors.white
 
 );
