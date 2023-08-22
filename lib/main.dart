@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:soul_sync_app/Screens/DataCollectionScreen/components/gender_info.dart';
 import 'package:soul_sync_app/Screens/Home/home.dart';
 import 'package:soul_sync_app/Screens/LoginScreen/signup_screen.dart';
 import 'package:soul_sync_app/Screens/SplashScreen/splash_screen.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
       ),
 
       debugShowCheckedModeBanner: false,
-      initialRoute: '/splash', //isLoggedIn ? '/home' : '/splash',
+      initialRoute: '/data', //isLoggedIn ? '/home' : '/splash',
       routes: {
         '/home': (context) => const Home(),
         '/onboarding': (context) => const OnboardingScreen(),
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
         // '/otp': (context) => OTPScreen(),
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignupScreen(),
-        //'/timetable': (context) => const TimetableHome(),
+        '/data': (context) => const GenderInfo(),//'/timetable': (context) => const TimetableHome(),
         //'/notification': (context) => const NotificationScreen(),
       },
     );
