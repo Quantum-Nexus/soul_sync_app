@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:soul_sync_app/Screens/DataCollectionScreen/userInfo.dart';
 import 'package:soul_sync_app/Screens/LoginScreen/components/otp_screen.dart';
 import 'package:soul_sync_app/Screens/LoginScreen/login_screen.dart';
 import '../../utils/constants/color.dart';
@@ -29,6 +30,13 @@ class _SignupScreenState extends State<SignupScreen> {
   bool isConfirmPasswordValid = true;
 
   void signUp() async {
+
+    // showDialog(context: context, builder: (context){
+    //   return Center(
+    //     child: CircularProgressIndicator(color: kSecondaryColor),
+    //   );
+    // });
+
     if (!isFieldsValid()) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("All fields are required")),
@@ -43,59 +51,59 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ProfileForm(
+          confirmPassword: confirmController.text,
+            email: emailController.text,
+            firstName: firstNameController.text,
+            lastName: lastNameController.text,
+            password: passwordController.text,)
+    ));
+
     const url = 'http://localhost:4000/api/v1/auth/sendotp';
 
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'email': emailController.text,
-        'password': passwordController.text,
-        'confirmPassword': confirmController.text,
-        'firstName': firstNameController.text,
-        'lastName': lastNameController.text,
-      }),
-    );
+    // final response = await http.post(
+    //   Uri.parse(url),
+    //   headers: {'Content-Type': 'application/json'},
+    //   body: jsonEncode({
+    //     'email': emailController.text,
+    //     'password': passwordController.text,
+    //     'confirmPassword': confirmController.text,
+    //     'firstName': firstNameController.text,
+    //     'lastName': lastNameController.text,
+    //   }),
+    // );
 
-    if (response.statusCode == 200) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return Center(
-            child: CircularProgressIndicator(
-              color: kSecondaryColor,
-            ),
-          );
-        },
-      );
+    // if (response.statusCode == 200) {
+    //   Navigator.of(context).push(MaterialPageRoute(
+    //     builder: (context) => OTPScreen(
+    //       confirmController: confirmController.text,
+    //       emailController: emailController.text,
+    //       firstNameController: firstNameController.text,
+    //       lastNameController: lastNameController.text,
+    //       passwordController: passwordController.text,
+    //     ),
+    //   ));
+    // } 
+    // else {
+    //   final responseBody = json.decode(response.body);
 
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => OTPScreen(
-          confirmController: confirmController.text,
-          emailController: emailController.text,
-          firstNameController: firstNameController.text,
-          lastNameController: lastNameController.text,
-          passwordController: passwordController.text,
-        ),
-      ));
-    } else {
-      final responseBody = json.decode(response.body);
+    //   if (responseBody.containsKey('message')) {
+    //     final errorMessage = responseBody['message'];
 
-      if (responseBody.containsKey('message')) {
-        final errorMessage = responseBody['message'];
-
-        if (errorMessage.contains('User is Already Registered')) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Email already exists. Please log in.')),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(errorMessage)),
-          );
-        }
-      }
-    }
+    //     if (errorMessage.contains('User is Already Registered')) {
+    //       ScaffoldMessenger.of(context).showSnackBar(
+    //         const SnackBar(content: Text('Email already exists. Please log in.')),
+    //       );
+    //     } else {
+    //       ScaffoldMessenger.of(context).showSnackBar(
+    //         SnackBar(content: Text(errorMessage)),
+    //       );
+    //     }
+    //   }
+    // }
   }
+  
 
   bool isFieldsValid() {
     setState(() {
@@ -267,33 +275,41 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
               const SizedBox(
-                height: 50,
+                height: 30,
               ),
               GestureDetector(
                 onTap: () {
                   signUp();
                 },
-                child: Container(
-                  width: 300,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: kSecondaryLightColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'Signup',
-                      style: TextStyle(
-                        fontFamily: 'Rubik Regular',
-                        fontSize: 20,
-                        color: kPrimaryColor,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 30.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: kSecondaryLightColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Next',
+                            style: TextStyle(
+                              fontFamily: 'Rubik Regular',
+                              fontSize: 20,
+                              color: kPrimaryColor,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(50.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
