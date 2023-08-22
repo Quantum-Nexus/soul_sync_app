@@ -28,7 +28,7 @@ MaterialColor kPrimarySwatch =
 
 //--------------------C O L O R S--------------------
 
-const Color kPrimaryColor = Color(0xff27374D);
+const Color kPrimaryColor = Color.fromRGBO(26, 31, 43, 1);
 const Color kPrimaryLightColor = Color(0xffDDE6ED);
 
 // This is the secondary color of the application
@@ -41,6 +41,7 @@ const Color kBackgroundColor = kPrimaryColor;
 // This is the text color of the application
 const Color kTextColor = Colors.white;  
 
+const Color kBrightColor = Color.fromRGBO(233, 64, 87, 1);
 
 // ------------------G R A D I E N T S------------------
 // This is the primary gradient color of the application
