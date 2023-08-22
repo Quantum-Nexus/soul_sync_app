@@ -43,7 +43,8 @@ class _ProfileFormState extends State<ProfileForm> {
   final TextEditingController graduationYearController =
       TextEditingController();
 
-  File? image1;
+  File? image;
+  final _picker = ImagePicker();
 
   bool isLoading = false;
 
@@ -69,15 +70,20 @@ class _ProfileFormState extends State<ProfileForm> {
 
 
   Future<void> _getImage(ImageSource source) async {
-    final pickedImage = await ImagePicker().pickImage(source: source);
+    final pickedImage = await _picker.pickImage(source: ImageSource.gallery );
 
     if (pickedImage != null) {
       setState(() {
-        image1 = File(pickedImage.path);
-        print(image1!.path);
+        image = File(pickedImage.path);
+        print(image !.path);
       });
     }
   }
+
+  // Future<void> uplaodImage() async{
+
+  //   var stream = 
+  // }
 
   Future<void> signUpWithProfile() async {
     setState(() {
@@ -99,6 +105,7 @@ class _ProfileFormState extends State<ProfileForm> {
     final url = 'http://localhost:4000/api/v1/auth/sendotp';
     
     try {
+
       final request = http.MultipartRequest('POST', Uri.parse(url));
     request.fields.addAll({
       'firstName': widget.firstName,
@@ -115,10 +122,16 @@ class _ProfileFormState extends State<ProfileForm> {
       'graduationYear': graduationYearController.text,
     });
   
-      if (image1 != null) {
-      final imageFile = await http.MultipartFile.fromPath('image', image1!.path);
-      request.files.add(imageFile);
-    }
+    //   if (image != null) {
+    //     var stream = new http.ByteStream(image!.openRead());
+    //   stream.cast();
+
+    //   var length = await image!.length();
+    //   final imageFile = await http.MultipartFile('image',stream,length);
+    //   request.files.add(imageFile);
+
+    //   var response = await request.send(); 
+    // }
       final response = await request.send();
       if (response.statusCode == 200) {
         print(selectedGender);
@@ -135,6 +148,8 @@ class _ProfileFormState extends State<ProfileForm> {
           heightController: heightController.text,
           instagramUsernameController: instagramUsernameController.text,
           graduationYearController: graduationYearController.text,
+          image: image,
+          selectedGender: selectedGender,
           )
     ));
         // Successfully signed up
@@ -233,10 +248,10 @@ class _ProfileFormState extends State<ProfileForm> {
               child: Text('Select Image'),
             ),
             // Display the selected image
-            if (image1 != null) Container(
+            if (image != null) Container(
               height: 300,
               width: 300,
-              child: Image.file(File(image1!.path))),
+              child: Image.file(File(image!.path))),
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: isLoading ? null : signUpWithProfile,

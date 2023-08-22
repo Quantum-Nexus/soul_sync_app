@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:soul_sync_app/Screens/Home/home.dart';
 import 'package:soul_sync_app/Screens/LoginScreen/login_screen.dart';
 import 'package:soul_sync_app/utils/constants/color.dart';
@@ -18,8 +21,11 @@ class OTPScreen extends StatefulWidget {
   final String heightController;
   final String instagramUsernameController;
   final String graduationYearController;
+  final String? selectedGender;
 
-  const OTPScreen({Key? key, 
+  late File? image;
+
+    OTPScreen({Key? key, 
   required this.emailController, 
   required this.passwordController, 
   required this.confirmController, 
@@ -30,7 +36,9 @@ class OTPScreen extends StatefulWidget {
   required this.contactNumberController, 
   required this.heightController, 
   required this.instagramUsernameController, 
-  required this.graduationYearController,  }) : super(key: key);
+  required this.graduationYearController,
+  required this.image, 
+  required this.selectedGender,  }) : super(key: key);
   @override
   _OTPScreenState createState() => _OTPScreenState();
 }
@@ -38,6 +46,20 @@ class OTPScreen extends StatefulWidget {
 class _OTPScreenState extends State<OTPScreen> {
   late List<FocusNode> _focusNodes;
   late List<TextEditingController> _controllers;
+  
+  final _picker = ImagePicker();
+
+  Future<void> _getImage(ImageSource source) async {
+    final pickedImage = await _picker.pickImage(source: ImageSource.gallery );
+
+    if (pickedImage != null) {
+      setState(() {
+        widget.image = File(pickedImage.path);
+        print(widget.image !.path);
+      });
+    }
+  }
+
 
   @override
   void initState() {
@@ -83,10 +105,8 @@ class _OTPScreenState extends State<OTPScreen> {
 
     const url ='http://localhost:4000/api/v1/auth/signup'; // Replace with your actual API endpoint
 
-  final response = await http.post(
-    Uri.parse(url),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode({
+  final request = http.MultipartRequest('POST', Uri.parse(url));
+    request.fields.addAll({
       'email': widget.emailController,
       'password': widget.passwordController,
       'confirmPassword': widget.confirmController,
@@ -98,15 +118,25 @@ class _OTPScreenState extends State<OTPScreen> {
       'height': widget.heightController,
       'instagramUsername': widget.instagramUsernameController,
       'graduationYear': widget.graduationYearController,
-      'gender': "Male",
+      'gender': widget.selectedGender ?? "",
       'otp': otp
-    }),
+    });
     
-  );
-  print(response);
+
+  //print(response);
 
   // Navigator.pop(context); // Close loading dialog
+      if (widget.image != null) {
+        var stream = new http.ByteStream(widget.image!.openRead());
+      stream.cast();
 
+      var length = await widget.image!.length();
+      final imageFile = await http.MultipartFile('image',stream,length);
+      request.files.add(imageFile);
+
+      
+    }
+      var response = await request.send(); 
   if (response.statusCode == 200) {
   ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -122,51 +152,20 @@ class _OTPScreenState extends State<OTPScreen> {
     ));
 
   } else{
-    final responseBody = json.decode(response.body);
-    if (responseBody.containsKey('message')) {
-      final errorMessage = responseBody['message'];
-      ScaffoldMessenger.of(context).showSnackBar(
+    final responseBody = await response.stream.bytesToString();
+    if (responseBody.contains('message')) {
+        final errorMessage = json.decode(responseBody)['message'];
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(errorMessage)),
         );
-    }
-
-      
     }
   
   print('Entered OTP: $otp'); 
   otp ='';// Print the OTP as a string
   // Now you can use the 'otp' variable as needed (e.g., send it to the server for verification).
 }
-
-  Widget buildDigitInput(int index) {
-    return Container(
-      width: 50,
-      height: 55,
-      alignment: Alignment.center,
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: _focusNodes[index].hasFocus ? const Color.fromARGB(255, 117, 194, 233): kSecondaryLightColor,
-          width: 2.0,
-        ),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: TextField(
-        controller: _controllers[index],
-        focusNode: _focusNodes[index],
-        keyboardType: TextInputType.number,
-        maxLength: 1,
-        textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
-        onChanged: (value) => onDigitEntered(index, value),
-        decoration: const InputDecoration(
-          counterText: '', // Hide the character count
-          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color.fromARGB(255, 117, 194, 233),width: 2.0) ),
-          disabledBorder: InputBorder.none
-        ),
-      ),
-    );
   }
+
 
   @override
   void dispose() {
@@ -178,7 +177,7 @@ class _OTPScreenState extends State<OTPScreen> {
     }
     super.dispose();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -223,8 +222,39 @@ class _OTPScreenState extends State<OTPScreen> {
       ),
     );
   }
-}
 
+
+
+Widget buildDigitInput(int index) {
+    return Container(
+      width: 50,
+      height: 55,
+      alignment: Alignment.center,
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: _focusNodes[index].hasFocus ? const Color.fromARGB(255, 117, 194, 233): kSecondaryLightColor,
+          width: 2.0,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: TextField(
+        controller: _controllers[index],
+        focusNode: _focusNodes[index],
+        keyboardType: TextInputType.number,
+        maxLength: 1,
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+        onChanged: (value) => onDigitEntered(index, value),
+        decoration: const InputDecoration(
+          counterText: '', // Hide the character count
+          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color.fromARGB(255, 117, 194, 233),width: 2.0) ),
+          disabledBorder: InputBorder.none
+        ),
+      ),
+    );
+  }
+}
 
 
 
