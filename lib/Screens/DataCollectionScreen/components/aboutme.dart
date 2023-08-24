@@ -24,6 +24,7 @@ class _AboutMeState extends State<AboutMe> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: kPrimaryColor,
+      body: Column(),
 
     );
   }
