@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:soul_sync_app/Screens/ConfessionScreen/addConfession.dart';
+import 'package:soul_sync_app/Screens/ConfessionScreen/confessionFeed.dart';
 import 'package:soul_sync_app/Screens/DataCollectionScreen/components/aboutme.dart';
 
 import 'package:soul_sync_app/Screens/DataCollectionScreen/components/gender_info.dart';
@@ -8,6 +10,7 @@ import 'package:soul_sync_app/Screens/DataCollectionScreen/components/profile_de
 import 'package:soul_sync_app/Screens/DataCollectionScreen/userInfo.dart';
 import 'package:soul_sync_app/Screens/Home/home.dart';
 import 'package:soul_sync_app/Screens/LoginScreen/signup_screen.dart';
+import 'package:soul_sync_app/Screens/ProfileScreen/profileScreen.dart';
 import 'package:soul_sync_app/Screens/SplashScreen/splash_screen.dart';
 import 'package:soul_sync_app/utils/constants/color.dart';
 
@@ -44,7 +47,7 @@ class MyApp extends StatelessWidget {
       ),
 
       debugShowCheckedModeBanner: false,
-      initialRoute: '/onboarding', //isLoggedIn ? '/home' : '/splash',
+      initialRoute: '/addconf', //isLoggedIn ? '/home' : '/splash',
       routes: {
         '/home': (context) => const Home(),
         '/onboarding': (context) => const OnboardingScreen(),
@@ -53,6 +56,9 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignupScreen(),
         '/data': (context) => const ProfileDetails(),
+        '/profile':(context) => const ProfileScreen(),
+        '/addconf':(context) =>  ConfessionSubmissionScreen(),
+        '/confeed':(context) =>  ConfessionFeedScreen(),
         //'/timetable': (context) => const TimetableHome(),
         // '/form': (context) =>  ProfileForm(),
         //'/timetable': (context) => const TimetableHome(),

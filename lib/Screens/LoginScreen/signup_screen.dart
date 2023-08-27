@@ -141,7 +141,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 padding: const EdgeInsets.all(70.0),
                 child: Text(
                   'Soul Sync',
-                  style: kLogoStyle,
+                  style: kLogo1Style,
                 ),
               ),
               const Center(

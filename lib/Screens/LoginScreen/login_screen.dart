@@ -48,14 +48,24 @@ class _LoginScreenState extends State<LoginScreen> {
     if (response.statusCode == 200) {
       
     final responseBody = json.decode(response.body);
+    print(responseBody);
+    final user = responseBody['user'];
+    final firstName = user['firstName'];
+    final lastName = user['lastName'];
+    final gender = user['gender']; // Access the 'firstName' field
+    print(firstName);
+  
     final jwtToken = responseBody['token'];
 
     // Store the JWT token securely
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('jwt_token', jwtToken);
+    prefs.setString('first_name', firstName);
+    prefs.setString('last_name', lastName);
+    prefs.setString('gender', gender);
 
       Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const Home()));
+      builder: (context) =>  Home()));
 
   } else{
     final responseBody = json.decode(response.body);
@@ -90,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.all(70.0),
                 child: Text(
                   'Soul Sync',
-                  style: kLogoStyle,
+                  style: kLogo1Style,
                 ),
               ),
              // SizedBox(height: 10,),

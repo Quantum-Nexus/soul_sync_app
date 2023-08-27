@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soul_sync_app/Screens/Onboarding/onboarding.dart';
+import 'package:soul_sync_app/utils/constants/logo.dart';
 
 import '../../utils/constants/color.dart';
 import '../Home/home.dart';
@@ -42,12 +43,14 @@ class _SplashScreenState extends State<SplashScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return AnimatedSplashScreen(
-        duration: 2000,
-        splash: Text("Soul Sync", style: kLogoStyle,),
-        nextScreen: Container(),
-        splashTransition: SplashTransition.fadeTransition,
-        pageTransitionType: PageTransitionType.fade,
-        backgroundColor: kPrimaryColor);
+    return Center(
+      child: AnimatedSplashScreen(
+          duration: 3000,
+          splash: Logo(),
+          nextScreen: Container(),
+          splashTransition: SplashTransition.fadeTransition,
+          pageTransitionType: PageTransitionType.fade,
+          backgroundColor: kPrimaryColor),
+    );
   }
 }

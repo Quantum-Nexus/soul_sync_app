@@ -5,28 +5,99 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:soul_sync_app/Screens/Home/components/appBar.dart';
+import 'package:soul_sync_app/Screens/Home/components/myDrawer.dart';
 import 'package:soul_sync_app/utils/constants/color.dart';
 import 'package:http/http.dart' as http;
 
+import '../../Model/userModel.dart';
+import 'components/card.dart';
+
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  String? storedUserName;
+  String? storedGender;
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserInfo();
+  }
+
+  void loadUserInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      storedUserName = prefs.getString('first_name');
+      storedGender = prefs.getString('gender');
+    });
+  }
+
   final CardSwiperController _controller = CardSwiperController();
   int _selectedIndex = 0;
+  Set<String> swipedProfiles = Set<String>();
+  bool _isLiked = false;
+  Candidate? _currentCandidate;
 
-  Future<void> logout() async {
+  void sendID(Candidate candidate) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.remove('jwt_token');
-    Navigator.of(context).pushReplacementNamed('/login');
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+
+    if (jwtToken.isEmpty) {
+      // Handle the case where JWT token is not available
+      // You might want to redirect to the login screen or handle it differently
+      print('JWT token is missing');
+      return;
+    }
+
+    print('Bearer $jwtToken');
+    if (candidate.email != null) {
+      const url =
+          'http://localhost:4000/api/v1/fetch/addconnection'; // Replace with your actual API endpoint
+
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'otheremail': candidate.email,
+          'my_token': 'Bearer $jwtToken',
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+        final jwtToken = responseBody['token'];
+
+        print(responseBody);
+
+        // Store the JWT token securely
+        final prefs = await SharedPreferences.getInstance();
+        prefs.setString('jwt_token', jwtToken);
+
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const Home()));
+      } else {
+        final responseBody = json.decode(response.body);
+        if (responseBody.containsKey('message')) {
+          final errorMessage = responseBody['message'];
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorMessage)),
+          );
+        }
+      }
+    }
   }
 
   Future<List<Candidate>> fetchCandidates() async {
-    final response = await http.get(Uri.parse('http://localhost:4000/api/v1/fetch/fetchallusers'));
+    final response = await http
+        .get(Uri.parse('http://localhost:4000/api/v1/fetch/fetchallusers'));
 
     if (response.statusCode == 200) {
       final List<dynamic> candidateData = json.decode(response.body);
@@ -37,59 +108,105 @@ class _HomeState extends State<Home> {
     }
   }
 
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  List<Candidate> filterCandidatesByGender(
+      List<Candidate> candidates, String userGender) {
+    // Navigator.pop(context);
+    if (userGender == 'Male') {
+      return candidates
+          .where((candidate) => candidate.gender == 'Female')
+          .toList();
+    } else if (userGender == 'Female') {
+      return candidates
+          .where((candidate) => candidate.gender == 'Male')
+          .toList();
+    } else {
+      return candidates;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(
-          "SOUL SYNC",
-          style: kLogoStyle,
-        ),
-        backgroundColor: Colors.transparent,
-        leading: GestureDetector(
-          onTap: () {
-            logout();
-          },
-          child: Icon(Icons.logout),
-        ),
-      ),
-      backgroundColor: Color(0xff1a1f2b),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Flexible(
-              child: Stack(
-                children:[ 
-                  Center(child: CircularProgressIndicator()),
-                  FutureBuilder<List<Candidate>>(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80),
+        child: MyAppBar()),
+      backgroundColor: kPrimaryColor,
+      drawer: AppDrawer(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 30.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Hello, " + (storedUserName ?? "Guest") + "👋",
+                  style: kWelcomeStyle,
+                ), // Display username or "Guest" if not available
+                Text(
+                  "Here's your swipe list for today.",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+          Flexible(
+            child: Stack(
+              children: [
+                //Center(child: CircularProgressIndicator()),
+                FutureBuilder<List<Candidate>>(
                   future: fetchCandidates(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Container();
+                      return Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Text('No candidates available.');
+                      return Center(child: Text('No candidates available.'));
                     } else {
+                      final filteredCandidates = filterCandidatesByGender(
+                          snapshot.data!, storedGender ?? "");
+
+                      if (filteredCandidates.isEmpty) {
+                        return Center(
+                          child: Text(
+                            'No more swipes',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        );
+                      }
+
                       return CardSwiper(
                         controller: _controller,
                         cardsCount: snapshot.data!.length,
+                        maxAngle: 60,
+                        isLoop: false,
+                        allowedSwipeDirection:
+                            AllowedSwipeDirection.only(left: true, right: true),
                         onSwipe: (previousIndex, currentIndex, direction) {
-                          // Handle card swiping logic
+                          final candidate = snapshot.data![currentIndex!];
+                          if (direction == CardSwiperDirection.right) {
+                            print("Swiped right");
+                            sendID(candidate);
+                          } else {
+                            print("Swiped Left");
+                          }
+
                           return true;
                         },
                         onUndo: (previousIndex, currentIndex, direction) {
                           // Handle card undo logic
+                          print("swiped left");
                           return true;
                         },
+                        
                         numberOfCardsDisplayed: 2,
                         padding: const EdgeInsets.all(16.0),
                         cardBuilder: (
@@ -97,172 +214,71 @@ class _HomeState extends State<Home> {
                           index,
                           horizontalThresholdPercentage,
                           verticalThresholdPercentage,
-                        ) =>
-                            ExampleCard(candidate: snapshot.data![index]),
+                        ) {
+                          if (index >= filteredCandidates.length) {
+                            print("no swipessssssss");
+                            return Center(
+                              child: Text(
+                                'No swipessssssssss',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            );
+                          } else {
+                            final candidate = filteredCandidates[index];
+                            if (swipedProfiles.contains(candidate.id)) {
+                              return Container(); // Skip this profile if it's already swiped
+                            }
+                            return ExampleCard(
+                              isLiked: _isLiked,
+                              candidate: candidate,
+                              onLike: () => sendID(candidate),
+                            );
+                          }
+                          //else {
+                          //   return Container();
+                          //   //Navigator.pop(context);
+                          //   return Center(
+                          //     child: Text(
+                          //       'No more swipes',
+                          //       style: TextStyle(
+                          //         fontSize: 18,
+                          //         fontWeight: FontWeight.bold,
+                          //       ),
+                          //     ),
+                          //   );
+                          // }
+                        },
                       );
                     }
                   },
                 ),
-                ]
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: const <BottomNavigationBarItem>[
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.home),
-      //       label: 'Home',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.favorite),
-      //       label: 'Favorites',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.person),
-      //       label: 'Profile',
-      //     ),
-      //   ],
-      //   currentIndex: _selectedIndex,
-      //   selectedItemColor: Colors.blue,
-      //   onTap: _onItemTapped,
-      // ),
-    );
-  }
-}
-
-class Candidate {
-  final String id;
-  final String firstName;
-  final String lastName;
-  final String email;
-  final String? about;
-  final int? gradYear;
-  final String imageUrl;
-
-  Candidate({
-    required this.gradYear,
-    required this.id,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.imageUrl,
-    required this.about
-  });
-
-  factory Candidate.fromJson(Map<String, dynamic> json) {
-    return Candidate(
-      id: json['_id'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      email: json['email'],
-      imageUrl: json['image'], 
-      gradYear: json['graduationYear'],
-      about: json['about'],
-    );
-  }
-}
-
-class ExampleCard extends StatelessWidget {
-
-  final Candidate candidate;
-
-  const ExampleCard({required this.candidate});
-
-  @override
-  Widget build(BuildContext context) {
-    
-    return Center(
-      child: Container(
-        height: MediaQuery.of(context).size.height*0.7,
-        child: Card(
-          elevation: 5,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
           ),
-          child: Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20.0),
-                child: Image.network(
-                  candidate.imageUrl,
-                  height: MediaQuery.of(context).size.height * 0.7,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Positioned.fill(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: double.maxFinite,
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            Colors.black.withOpacity(0.9),
-                          ],
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                candidate.firstName + ', ' ,
-                                style: kNameStyle
-                              ),
-                              Text(
-                                '21' ,
-                                style: TextStyle(
-                                  fontSize: 45,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white54
-                                ),
-                              ),
-                            ],
-                          ),
-                          //SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Text(
-                                'Grad. Yr: ',
-                                style: kHeadStyle
-                              ),
-                              Text(
-                                candidate.gradYear.toString(),
-                                style: kLeadingStyle
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 8),
+          SizedBox(
+              height:
+                  16), // Add spacing between the card swiper and like button
+          // IconButton(
+          //   onPressed: () {
 
-                          Text(
-                            "About",
-                            style: kHeadStyle,
-                          ),
-                          SizedBox(height: 8,),
-                          Text(
-                            candidate.about ?? "aboutttt",
-                            maxLines: 3, // Show only the first 3 lines
-                            overflow: TextOverflow.ellipsis,
-                            style: kAboutStyle,
-                            ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+          //       sendID(_currentCandidate!); // Send the selected candidate
+          //       setState(() {
+          //         _isLiked = !_isLiked; // Toggle the like status
+          //       });
+
+          //   },
+          //   icon: Icon(
+          //     _isLiked ? Icons.favorite : Icons.favorite_border,
+          //   ),
+          //   color: _isLiked
+          //       ? Colors.red
+          //       : Colors.grey, // Change colors based on like status
+          //   iconSize: 40, // Adjust icon size as needed
+          // ),
+        ],
       ),
     );
   }

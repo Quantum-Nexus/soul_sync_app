@@ -28,7 +28,8 @@ MaterialColor kPrimarySwatch =
 
 //--------------------C O L O R S--------------------
 
-const Color kPrimaryColor = Color.fromRGBO(26, 31, 43, 1);
+const Color kPrimaryColor = Colors.black;
+//Color.fromRGBO(26, 31, 43, 1);
 const Color kPrimaryLightColor = Color(0xffDDE6ED);
 
 // This is the secondary color of the application
@@ -37,6 +38,13 @@ const Color kSecondaryLightColor = Color(0xff9DB2BF);
 
 // This is the background color of the application
 const Color kBackgroundColor = kPrimaryColor;
+
+const Color kYellowColor = Color(0xffFFF100);
+
+
+const Color kPinkColor = Color(0xffFF2093);
+
+const Color kGreyColor = Color.fromARGB(255, 31, 31, 31);
 
 // This is the text color of the application
 const Color kTextColor = Colors.white;  
@@ -67,13 +75,36 @@ TextStyle kDescriptionStyle = GoogleFonts.inconsolata(
     fontWeight: FontWeight.w800
 );
 
-TextStyle kLogoStyle = GoogleFonts.quicksand(
-    fontSize:26,
-    fontStyle: FontStyle.italic,
-    fontWeight: FontWeight.w600,
-  color: kSecondaryLightColor
+TextStyle kLogo1Style = GoogleFonts.leagueSpartan(
+    fontSize:64,
+    fontWeight: FontWeight.w800,
+  color: kYellowColor
 
 );
+
+TextStyle kLogo2Style = GoogleFonts.leagueSpartan(
+    fontSize:64,
+    fontWeight: FontWeight.w800,
+  color: kPinkColor
+
+);
+
+TextStyle kTagStyle = GoogleFonts.quicksand(
+    fontSize:13,
+    letterSpacing: 9,
+    fontWeight: FontWeight.w600,
+    color: Colors.white
+
+);
+
+TextStyle kAppbarStyle = GoogleFonts.leagueSpartan(
+    fontSize:16,
+    fontWeight: FontWeight.w800,
+  color: kPinkColor
+
+);
+
+
 TextStyle kNameStyle = GoogleFonts.roboto(
     fontSize:50,
     fontWeight: FontWeight.w500,
@@ -87,7 +118,7 @@ TextStyle kHeadStyle = GoogleFonts.quicksand(
 
 );
 TextStyle kLeadingStyle = GoogleFonts.roboto(
-    fontSize:20,
+    fontSize:16,
     fontWeight: FontWeight.w500,
   color: Colors.white
 
@@ -97,4 +128,26 @@ TextStyle kAboutStyle = GoogleFonts.roboto(
     fontWeight: FontWeight.w500,
   color: Colors.white
 
+);
+
+TextStyle kWelcomeStyle = GoogleFonts.barlow(
+    fontSize: 33,
+    fontWeight: FontWeight.w800,
+  color: Colors.white
+
+);
+
+// ---------------- PROFILESCREEN STYLES -----------------
+
+TextStyle kDetailHeadStyle = GoogleFonts.barlow(
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+  color: Colors.white38
+);
+
+TextStyle kDetailStyle = GoogleFonts.barlow(
+  height: 1.2,
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+  color: Colors.white
 );

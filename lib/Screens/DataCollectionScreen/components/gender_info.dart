@@ -34,7 +34,9 @@ class _GenderInfoState extends State<GenderInfo> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: kPrimaryColor,
+      backgroundColor:// Colors.white
+      kPrimaryColor
+      ,
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 20, vertical: 50),
         padding: EdgeInsets.all(20),

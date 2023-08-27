@@ -3,14 +3,20 @@ class Candidate {
   final String firstName;
   final String lastName;
   final String email;
-  final String imageUrl; // Assuming "image" from the API response is the URL
+  final String? about;
+  final String? gender;
+  final int? gradYear;
+  final String imageUrl;
 
   Candidate({
+    required this.gradYear,
     required this.id,
     required this.firstName,
     required this.lastName,
     required this.email,
     required this.imageUrl,
+    required this.about,
+    required this.gender
   });
 
   factory Candidate.fromJson(Map<String, dynamic> json) {
@@ -19,7 +25,10 @@ class Candidate {
       firstName: json['firstName'],
       lastName: json['lastName'],
       email: json['email'],
+      gender: json['gender'],
       imageUrl: json['image'],
+      gradYear: json['graduationYear'],
+      about: json['about'],
     );
   }
 }
