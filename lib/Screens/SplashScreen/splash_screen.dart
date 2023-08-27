@@ -8,7 +8,6 @@ import 'package:soul_sync_app/utils/constants/logo.dart';
 import '../../utils/constants/color.dart';
 import '../Home/home.dart';
 import '../LoginScreen/login_screen.dart';
-import 'components/body.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -43,8 +42,10 @@ class _SplashScreenState extends State<SplashScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: AnimatedSplashScreen(
+    double height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      body: AnimatedSplashScreen(
+          splashIconSize: height,
           duration: 3000,
           splash: Logo(),
           nextScreen: Container(),

@@ -13,13 +13,14 @@ class MobileNo extends StatefulWidget {
 
 class _MobileNoState extends State<MobileNo> {
   TextEditingController _phoneNumberController = TextEditingController();
-  String _phoneNumber = ''; // Store the entered phone number
+  var _phoneNumber = ''; // Store the entered phone number
   bool isPressed = false;
 
-  void _toggleButtonState() {
+  void _toggledataButtonState() {
     setState(() {
       isPressed = !isPressed;
     });
+    print(_phoneNumber);
   }
 
   @override
@@ -27,7 +28,7 @@ class _MobileNoState extends State<MobileNo> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: kPrimaryColor,
       body: Container(
         margin: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
         padding: EdgeInsets.all(20),
@@ -45,11 +46,11 @@ class _MobileNoState extends State<MobileNo> {
                   child: Text(
                     "My Mobile",
                     style: GoogleFonts.urbanist(
-                        color: kBrightColor, fontSize: height * 0.065),
+                        color: kPrimaryLightColor, fontSize: height * 0.065),
                   )),
-              Text(
-                "Please enter your valid phone number. We will send you a 4-digit code to verify your account. ",
-                style: TextStyle(color: Colors.black),
+              const Text(
+                "Please enter your valid phone number. We will verify your account. ",
+                style: TextStyle(color: Colors.white),
               ),
               Container(
                   margin: EdgeInsets.symmetric(vertical: height * 0.045),
@@ -59,19 +60,50 @@ class _MobileNoState extends State<MobileNo> {
                   //   border: Border.all(width: 1, color: kBrightColor, style: BorderStyle.solid),
                   //   borderRadius: BorderRadius.all(Radius.circular(height*0.025)),           ),
                   child: IntlPhoneField(
+                    style: TextStyle(color: Colors.white),
+                    dropdownTextStyle: TextStyle(color: kPrimaryLightColor),
+                    cursorColor: kPrimaryLightColor,
                     controller: _phoneNumberController,
-                    decoration: InputDecoration(
-        
+                    decoration: const InputDecoration(
+
+                      // iconColor:  Colors.white,
+                      // fillColor: Colors.white,
+                      hintText: '000-000-0000',
+                      hintStyle: TextStyle(
+                        color: Colors.grey,
+                      ),
+                      // prefixStyle: TextStyle(
+                      //   color: kPrimaryLightColor,
+                      // ),
+                      // suffixStyle: TextStyle(
+                      //   color: kPrimaryLightColor,
+                      // ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: kPrimaryLightColor,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: kPrimaryLightColor),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      prefixIconColor: kPrimaryLightColor,
+                      // focusColor: kPrimaryLightColor,
                       labelText: 'Phone Number',
+                      labelStyle: TextStyle(color: kPrimaryLightColor),
                       border: OutlineInputBorder(
-                        borderSide: BorderSide(),
+                        borderSide: BorderSide(
+                          color: kPrimaryLightColor,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                     ),
                     initialCountryCode: 'IN',
                     onChanged: (phone) {
-                     setState(() {
-                      _phoneNumber = phone.completeNumber;
-                    });
+                      setState(() {
+                        _phoneNumber = phone.completeNumber;
+                      });
                     },
                   )),
               SizedBox(
@@ -79,27 +111,20 @@ class _MobileNoState extends State<MobileNo> {
               ),
               GestureDetector(
                 onTap: () {
-                  _toggleButtonState();
-                  String phoneNumber = _phoneNumberController.text;
-                  // You can handle the phone number here
-                  print('Phone Number: $phoneNumber');
+                  _toggledataButtonState();
                 },
                 child: Container(
                   alignment: Alignment.center,
                   height: height * 0.060,
                   width: double.maxFinite,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: isPressed ? Colors.white : kBrightColor,
-                    border: Border.all(
-                        color: isPressed ? kBrightColor : Colors.transparent,
-                        width: 1),
+                    borderRadius: BorderRadius.circular(10),
+                    color: kPrimaryLightColor,
                   ),
-                  child: Text(
+                  child: const Text(
                     'Continue',
                     style: TextStyle(
-                        color: isPressed ? kBrightColor : Colors.white,
-                        fontWeight: FontWeight.bold),
+                        color: kPrimaryColor, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),

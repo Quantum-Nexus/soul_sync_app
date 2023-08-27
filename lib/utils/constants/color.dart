@@ -30,7 +30,7 @@ MaterialColor kPrimarySwatch =
 
 const Color kPrimaryColor = Colors.black;
 //Color.fromRGBO(26, 31, 43, 1);
-const Color kPrimaryLightColor = Color(0xffDDE6ED);
+const Color kPrimaryLightColor = Color(0xffDAE4EF);
 
 // This is the secondary color of the application
 const Color kSecondaryColor = Color(0xff526D82);
@@ -91,6 +91,7 @@ TextStyle kLogo2Style = GoogleFonts.leagueSpartan(
 
 TextStyle kTagStyle = GoogleFonts.quicksand(
     fontSize:13,
+    height: -1,
     letterSpacing: 9,
     fontWeight: FontWeight.w600,
     color: Colors.white
