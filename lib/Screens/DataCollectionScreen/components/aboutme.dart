@@ -12,7 +12,7 @@ class _AboutMeState extends State<AboutMe> {
 
   bool isPressed = false;
 
-  void _toggleButtonState() {
+  void _toggledataButtonState() {
     setState(() {
       isPressed = !isPressed;
     });

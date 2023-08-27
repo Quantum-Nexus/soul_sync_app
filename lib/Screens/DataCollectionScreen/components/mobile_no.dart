@@ -18,7 +18,14 @@ class _MobileNoState extends State<MobileNo> {
 
   void _toggledataButtonState() {
     setState(() {
-      isPressed = !isPressed;
+      if (_phoneNumber == "") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Please enter your mobile number."), backgroundColor: kPinkColor,),
+        );
+        return;
+      } else {
+        isPressed = !isPressed;
+      }
     });
     print(_phoneNumber);
   }
@@ -112,6 +119,9 @@ class _MobileNoState extends State<MobileNo> {
               GestureDetector(
                 onTap: () {
                   _toggledataButtonState();
+                  if( isPressed == true) {
+                    Navigator.pushNamed(context, '/gender');
+                  }
                 },
                 child: Container(
                   alignment: Alignment.center,
