@@ -23,7 +23,14 @@ class _GenderInfoState extends State<GenderInfo> {
 
   void _toggledataButtonState() {
     setState(() {
-      isPressed = !isPressed;
+      if (selectedOption == "") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Please specify your gender."),backgroundColor: kPinkColor),
+        );
+        return;
+      } else {
+        isPressed = !isPressed;
+      }
     });
   }
 
@@ -41,7 +48,7 @@ class _GenderInfoState extends State<GenderInfo> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: height*0.012,
+              height: height * 0.012,
             ),
             //column elsement 1
             // Row(
@@ -103,6 +110,9 @@ class _GenderInfoState extends State<GenderInfo> {
             GestureDetector(
               onTap: () {
                 _toggledataButtonState();
+                if (isPressed == true) {
+                  Navigator.pushNamed(context, '/aboutme');
+                }
               },
               child: Container(
                 alignment: Alignment.center,
@@ -110,13 +120,12 @@ class _GenderInfoState extends State<GenderInfo> {
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Color(0xFFDAE4EF),
+                  color: kPrimaryLightColor,
                 ),
-                child: Text(
+                child: const Text(
                   'Continue',
                   style: TextStyle(
-                      color: kPrimaryColor,
-                      fontWeight: FontWeight.bold),
+                      color: kPrimaryColor, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -151,8 +160,7 @@ class OptionItem extends StatelessWidget {
         decoration: BoxDecoration(
           color: isTapped ? kPinkColor : Colors.transparent,
           border: Border.all(
-              color: isTapped ? kPinkColor : Colors.white,
-              width: 0.25),
+              color: isTapped ? kPinkColor : Colors.white, width: 0.25),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
@@ -161,13 +169,13 @@ class OptionItem extends StatelessWidget {
             Text(
               label,
               style: GoogleFonts.urbanist(
-                color: Colors.white ,
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
                 fontSize: height * 0.0175,
               ),
             ),
             Icon(
-              isTapped ? Icons.check: null,
+              isTapped ? Icons.check : null,
               color: isTapped ? Colors.white : null,
             ),
           ],
