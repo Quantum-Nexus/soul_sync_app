@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
       ),
 
       debugShowCheckedModeBanner: false,
-      initialRoute: '/addconf', //isLoggedIn ? '/home' : '/splash',
+      initialRoute: '/data', //isLoggedIn ? '/home' : '/splash',
       routes: {
         '/home': (context) => const Home(),
         '/onboarding': (context) => const OnboardingScreen(),
@@ -55,10 +55,7 @@ class MyApp extends StatelessWidget {
         // '/otp': (context) => OTPScreen(),
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignupScreen(),
-        '/data': (context) => const ProfileDetails(),
-        '/profile':(context) => const ProfileScreen(),
-        '/addconf':(context) =>  ConfessionSubmissionScreen(),
-        '/confeed':(context) =>  ConfessionFeedScreen(),
+        '/data': (context) => const MobileNo(),
         //'/timetable': (context) => const TimetableHome(),
         // '/form': (context) =>  ProfileForm(),
         //'/timetable': (context) => const TimetableHome(),
