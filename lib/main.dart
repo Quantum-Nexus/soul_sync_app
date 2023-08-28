@@ -6,8 +6,10 @@ import 'package:soul_sync_app/Screens/DataCollectionScreen/components/aboutme.da
 
 import 'package:soul_sync_app/Screens/DataCollectionScreen/components/gender_info.dart';
 import 'package:soul_sync_app/Screens/DataCollectionScreen/components/mobile_no.dart';
+import 'package:soul_sync_app/Screens/DataCollectionScreen/components/personal_details.dart';
 import 'package:soul_sync_app/Screens/DataCollectionScreen/components/profile_details.dart';
 import 'package:soul_sync_app/Screens/DataCollectionScreen/userInfo.dart';
+import 'package:soul_sync_app/Screens/DataCollectionScreen/welcome.dart';
 import 'package:soul_sync_app/Screens/Home/home.dart';
 import 'package:soul_sync_app/Screens/LoginScreen/signup_screen.dart';
 import 'package:soul_sync_app/Screens/ProfileScreen/profileScreen.dart';
@@ -44,10 +46,11 @@ class MyApp extends StatelessWidget {
 
       theme: ThemeData(
         primarySwatch: kPrimarySwatch,
+        // brightness: Brightness.dark,
       ),
-
+      
       debugShowCheckedModeBanner: false,
-      initialRoute: '/onboarding', //isLoggedIn ? '/home' : '/splash',
+      initialRoute: '/personaldetails', //isLoggedIn ? '/home' : '/splash',
       routes: {
         '/home': (context) => const Home(),
         '/onboarding': (context) => const OnboardingScreen(),
@@ -56,10 +59,11 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignupScreen(),
         '/data': (context) => const MobileNo(),
-        //'/timetable': (context) => const TimetableHome(),
+        '/welcome': (context) => const Welcome(),
         '/aboutme': (context) =>  AboutMe(),
         '/gender': (context) =>  GenderInfo(),
-        //'/timetable': (context) => const TimetableHome(),
+        '/personaldetails': (context) => const PersonalDetails(),
+
         //'/notification': (context) => const NotificationScreen(),
       },
     );
