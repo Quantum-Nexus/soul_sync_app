@@ -24,7 +24,7 @@ MaterialColor getMaterialColor(Color color) {
 
 // This is the primary swatch of the application
 MaterialColor kPrimarySwatch =
-    getMaterialColor(const Color.fromARGB(255, 39, 55, 77));
+    getMaterialColor(Color.fromRGBO(0, 0, 0, 1));
 
 //--------------------C O L O R S--------------------
 

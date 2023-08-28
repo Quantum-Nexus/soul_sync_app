@@ -52,12 +52,12 @@ class _MobileNoState extends State<MobileNo> {
                   padding: EdgeInsets.symmetric(vertical: height * 0.0045),
                   child: Text(
                     "My Mobile",
-                    style: GoogleFonts.urbanist(
+                    style: GoogleFonts.quicksand(
                         color: kPrimaryLightColor, fontSize: height * 0.065),
                   )),
               const Text(
                 "Please enter your valid phone number. We will verify your account. ",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white,),
               ),
               Container(
                   margin: EdgeInsets.symmetric(vertical: height * 0.045),
