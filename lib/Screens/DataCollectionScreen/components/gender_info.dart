@@ -111,7 +111,7 @@ class _GenderInfoState extends State<GenderInfo> {
               onTap: () {
                 _toggledataButtonState();
                 if (isPressed == true) {
-                  Navigator.pushNamed(context, '/aboutme');
+                  Navigator.pushNamed(context, '/personaldetails');
                 }
               },
               child: Container(
