@@ -99,15 +99,23 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                 children: [
                   Text.rich(
                     TextSpan(
-                        text: 'Matching birth dates?\n',
-                        style: GoogleFonts.barlow(
+                        text: 'Age is just a number\n',
+                        style: GoogleFonts.urbanist(
                             fontSize: height * 0.0445,
                             fontWeight: FontWeight.bold,
                             color: kPrimaryLightColor),
                         children: <InlineSpan>[
                           TextSpan(
-                            text: 'sealing our fate 😂',
-                            style: GoogleFonts.barlow(
+                            text: 'and we want\n',
+                            style: GoogleFonts.urbanist(
+                              fontSize: height * 0.045,
+                              fontWeight: FontWeight.bold,
+                              color: kPrimaryLightColor,
+                            ),
+                          ),
+                          TextSpan(
+                            text: 'YOURS',
+                            style: GoogleFonts.urbanist(
                               fontSize: height * 0.045,
                               fontWeight: FontWeight.bold,
                               color: kPinkColor,
