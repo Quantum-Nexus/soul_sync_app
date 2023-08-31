@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:soul_sync_app/utils/constants/color.dart';
 
 class ProfileDetails extends StatefulWidget {
@@ -30,6 +31,45 @@ class _ProfileDetailsState extends State<ProfileDetails> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             // crossAxisAlignment: ,
             children: [
+              Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                padding: EdgeInsets.zero,
+                constraints: BoxConstraints(),
+                color: kPinkColor,
+                onPressed: () {},
+                icon: Icon(Icons.arrow_back_ios_new),
+              ),
+              Row(
+                children: [
+                  Text(
+                    "2 ",
+                    style: GoogleFonts.barlow(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold
+                      ),
+                  ),
+                  Text(" OF ", 
+                  style: GoogleFonts.barlow(
+                      color: Colors.white54,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold
+                      ),
+                  ),
+                  Text("4", 
+                  style: GoogleFonts.barlow(
+                      color: Colors.white54,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold
+                      ),
+                  )
+                ],
+              ),
+              SizedBox()
+            ],
+          ),
               SizedBox(
                 height: height * 0.04,
               ),

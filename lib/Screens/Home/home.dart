@@ -96,8 +96,13 @@ class _HomeState extends State<Home> {
   }
 
   Future<List<Candidate>> fetchCandidates() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+    
     final response = await http
-        .get(Uri.parse('http://localhost:4000/api/v1/fetch/fetchallusers'));
+        .get(Uri.parse('http://localhost:4000/api/v1/fetch/fetchallusers'),
+        headers: {'Authorization': 'Bearer $jwtToken'},
+        );
 
     if (response.statusCode == 200) {
       final List<dynamic> candidateData = json.decode(response.body);

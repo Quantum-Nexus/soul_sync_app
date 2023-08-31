@@ -25,7 +25,9 @@ class _GenderInfoState extends State<GenderInfo> {
     setState(() {
       if (selectedOption == "") {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please specify your gender."),backgroundColor: kPinkColor),
+          const SnackBar(
+              content: Text("Please specify your gender."),
+              backgroundColor: kPinkColor),
         );
         return;
       } else {
@@ -47,34 +49,55 @@ class _GenderInfoState extends State<GenderInfo> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: height * 0.012,
-            ),
-            //column elsement 1
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     IconButton(
-            //       padding: EdgeInsets.zero,
-            //       constraints: BoxConstraints(),
-            //       color: kPinkColor,
-            //       onPressed: () {},
-            //       icon: Icon(Icons.arrow_back_ios_new),
-            //     ),
-            //     Text(
-            //       'Skip',
-            //       style: TextStyle(
-            //           color: kPinkColor, fontWeight: FontWeight.bold),
-            //     )
-            //   ],
+            // SizedBox(
+            //   height: height * 0.012,
             // ),
-            Text(
-              "I am",
-              style: GoogleFonts.urbanist(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  fontSize: height * 0.065),
+            //column elsement 1
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: BoxConstraints(),
+                  color: kPinkColor,
+                  onPressed: () {},
+                  icon: Icon(Icons.arrow_back_ios_new),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "1 ",
+                      style: GoogleFonts.barlow(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold
+                        ),
+                    ),
+                    Text(" OF ", 
+                    style: GoogleFonts.barlow(
+                        color: Colors.white54,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold
+                        ),
+                    ),
+                    Text("3", 
+                    style: GoogleFonts.barlow(
+                        color: Colors.white54,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold
+                        ),
+                    )
+                  ],
+                ),
+                SizedBox()
+              ],
             ),
+            Text("I am", style: kDHeadStyle
+                // GoogleFonts.urbanist(
+                //     fontWeight: FontWeight.bold,
+                //     color: Colors.white,
+                //     fontSize: height * 0.065),
+                ),
             Container(
               height: height * 0.225,
               child: Column(

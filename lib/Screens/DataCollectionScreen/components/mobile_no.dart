@@ -45,9 +45,48 @@ class _MobileNoState extends State<MobileNo> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: height * 0.120,
-              ),
+               Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: BoxConstraints(),
+                  color: kPinkColor,
+                  onPressed: () {},
+                  icon: Icon(Icons.arrow_back_ios_new),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "1 ",
+                      style: GoogleFonts.barlow(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold
+                        ),
+                    ),
+                    Text(" OF ", 
+                    style: GoogleFonts.barlow(
+                        color: Colors.white54,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold
+                        ),
+                    ),
+                    Text("4", 
+                    style: GoogleFonts.barlow(
+                        color: Colors.white54,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold
+                        ),
+                    )
+                  ],
+                ),
+                SizedBox()
+              ],
+            ),
+              // SizedBox(
+              //   height: height * 0.120,
+              // ),
               Padding(
                   padding: EdgeInsets.symmetric(vertical: height * 0.0045),
                   child: Text(

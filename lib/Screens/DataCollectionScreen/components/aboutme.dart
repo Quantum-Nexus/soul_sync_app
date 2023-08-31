@@ -140,172 +140,201 @@ class _AboutMeState extends State<AboutMe> {
       resizeToAvoidBottomInset:
           false, // Add this line to prevent automatic scrolling
 
-      body: SafeArea(
-        child: Container(
-          height: height,
-          width: width,
-          margin: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                // height: height *0.065,
-                margin: EdgeInsets.only(top: height * 0.065),
-                child: Text.rich(
-                  TextSpan(
-                      text: 'Transform your college ',
-                      style: GoogleFonts.urbanist(
-                          fontSize: height * 0.0445,
+      body: Container(
+        height: height,
+        width: width,
+        margin: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+        padding: EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              padding: EdgeInsets.zero,
+              constraints: BoxConstraints(),
+              color: kPinkColor,
+              onPressed: () {},
+              icon: Icon(Icons.arrow_back_ios_new),
+            ),
+            Row(
+              children: [
+                Text(
+                  "3 ",
+                  style: GoogleFonts.barlow(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold
+                    ),
+                ),
+                Text(" OF ", 
+                style: GoogleFonts.barlow(
+                    color: Colors.white54,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold
+                    ),
+                ),
+                Text("3", 
+                style: GoogleFonts.barlow(
+                    color: Colors.white54,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold
+                    ),
+                )
+              ],
+            ),
+            SizedBox()
+          ],
+        ),
+            Container(
+              // height: height *0.065,
+              //margin: EdgeInsets.only(top: height * 0.065),
+              child: Text.rich(
+                TextSpan(
+                    text: 'Love at first ',
+                    style: kDHead2Style,
+                    children: <InlineSpan>[
+                      TextSpan(
+                        text: 'Pic',
+                        style: GoogleFonts.urbanist(
+                          fontSize: height * 0.045,
                           fontWeight: FontWeight.bold,
-                          color: kPrimaryLightColor),
-                      children: <InlineSpan>[
-                        TextSpan(
-                          text: 'STORY ',
-                          style: GoogleFonts.urbanist(
-                            fontSize: height * 0.045,
-                            fontWeight: FontWeight.bold,
-                            color: kPinkColor,
+                          color: kPinkColor,
+                        ),
+                      ),
+                    ]),
+              ),
+            ),
+            Form(
+              key: _formKey,
+              child: Container(
+                height: height * 0.38,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      ImageInputContainer(
+                        image: _pickedImage,
+                        onTap: () async {
+                          await _showImageSourceDialog(context);
+                        },
+                      ),
+                      // GestureDetector(
+                      //   onTap: () => _showImageSourceDialog(context),
+                      //   child: AbsorbPointer(
+                      //     absorbing: true,
+                      //     child: TextFormField(
+                      //       enableInteractiveSelection: true,
+                      //       cursorColor: kPrimaryLightColor,
+                      //       style: TextStyle(color: kPrimaryLightColor),
+                      //       decoration: InputDecoration(
+                      //         focusedBorder: OutlineInputBorder(
+                      //           borderSide: BorderSide(
+                      //               color: kPrimaryLightColor, width: 0.25),
+                      //           borderRadius:
+                      //               BorderRadius.all(Radius.circular(10)),
+                      //         ),
+                      //         border: OutlineInputBorder(),
+                      //         labelText: 'Select your image',
+                      //         labelStyle: TextStyle(
+                      //             color:
+                      //                 kPrimaryLightColor), // Hint text color
+                      //         enabledBorder: OutlineInputBorder(
+                      //           borderRadius:
+                      //               BorderRadius.all(Radius.circular(10)),
+                      //           borderSide: BorderSide(
+                      //               color: kPrimaryLightColor,
+                      //               width: 0.25), // Border color
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      TextFormField(
+                        cursorColor: kPrimaryLightColor,
+                        style: const TextStyle(color: kPrimaryLightColor),
+                        decoration: const InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: kPrimaryLightColor, width: 0.25),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10)),
+                          ),
+                          border: OutlineInputBorder(),
+                          labelText: 'Instagram ID',
+                          labelStyle: TextStyle(
+                              color: kPrimaryLightColor), // Hint text color
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(
+                                color: kPrimaryLightColor,
+                                width: 0.25), // Border color
                           ),
                         ),
-                        TextSpan(
-                          text: 'today',
-                          style: GoogleFonts.urbanist(
-                            fontSize: height * 0.045,
-                            fontWeight: FontWeight.bold,
-                            color: kPrimaryLightColor,
+                        onChanged: (value) {
+                          _instagramId = value;
+                        },
+                      ),
+                      TextFormField(
+                        cursorColor: kPrimaryLightColor,
+                        style: const TextStyle(color: kPrimaryLightColor),
+                        maxLines: 3,
+                        decoration: const InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: kPrimaryLightColor, width: 0.25),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10)),
+                          ),
+                          border: OutlineInputBorder(),
+                          labelText: 'About',
+                          hintText: "Once Upon a Swipe...",
+                          hintStyle: TextStyle(color: Colors.white38),
+                          hintMaxLines: 3,
+                          labelStyle: TextStyle(
+                              color: kPrimaryLightColor), // Hint text color
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(
+                                color: kPrimaryLightColor,
+                                width: 0.25), // Border color
                           ),
                         ),
-                      ]),
+                        onChanged: (value) {
+                          _about = value;
+                        },
+                      ),
+                    ]),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                _toggledataButtonState();
+                if (isPressed == true) {
+                  Navigator.pushNamed(context, '/welcome');
+                }
+              },
+              child: Container(
+                alignment: Alignment.center,
+                height: height * 0.060,
+                // width: double.maxFinite,
+                decoration: BoxDecoration(
+                  // border: Border.all(
+                  // color: Colors.red, width: 1, style: BorderStyle.solid),
+                  borderRadius: BorderRadius.circular(10),
+                  color: kPrimaryLightColor,
+                ),
+                child: const Text(
+                  'Continue',
+                  style: TextStyle(
+                      color: kPrimaryColor, fontWeight: FontWeight.bold),
                 ),
               ),
-              Form(
-                key: _formKey,
-                child: Container(
-                  height: height * 0.38,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        ImageInputContainer(
-                          image: _pickedImage,
-                          onTap: () async {
-                            await _showImageSourceDialog(context);
-                          },
-                        ),
-                        // GestureDetector(
-                        //   onTap: () => _showImageSourceDialog(context),
-                        //   child: AbsorbPointer(
-                        //     absorbing: true,
-                        //     child: TextFormField(
-                        //       enableInteractiveSelection: true,
-                        //       cursorColor: kPrimaryLightColor,
-                        //       style: TextStyle(color: kPrimaryLightColor),
-                        //       decoration: InputDecoration(
-                        //         focusedBorder: OutlineInputBorder(
-                        //           borderSide: BorderSide(
-                        //               color: kPrimaryLightColor, width: 0.25),
-                        //           borderRadius:
-                        //               BorderRadius.all(Radius.circular(10)),
-                        //         ),
-                        //         border: OutlineInputBorder(),
-                        //         labelText: 'Select your image',
-                        //         labelStyle: TextStyle(
-                        //             color:
-                        //                 kPrimaryLightColor), // Hint text color
-                        //         enabledBorder: OutlineInputBorder(
-                        //           borderRadius:
-                        //               BorderRadius.all(Radius.circular(10)),
-                        //           borderSide: BorderSide(
-                        //               color: kPrimaryLightColor,
-                        //               width: 0.25), // Border color
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                        TextFormField(
-                          cursorColor: kPrimaryLightColor,
-                          style: const TextStyle(color: kPrimaryLightColor),
-                          decoration: const InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: kPrimaryLightColor, width: 0.25),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                            border: OutlineInputBorder(),
-                            labelText: 'Instagram ID',
-                            labelStyle: TextStyle(
-                                color: kPrimaryLightColor), // Hint text color
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                              borderSide: BorderSide(
-                                  color: kPrimaryLightColor,
-                                  width: 0.25), // Border color
-                            ),
-                          ),
-                          onChanged: (value) {
-                            _instagramId = value;
-                          },
-                        ),
-                        TextFormField(
-                          cursorColor: kPrimaryLightColor,
-                          style: const TextStyle(color: kPrimaryLightColor),
-                          maxLines: 3,
-                          decoration: const InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: kPrimaryLightColor, width: 0.25),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                            border: OutlineInputBorder(),
-                            labelText: 'About',
-                            hintMaxLines: 3,
-                            labelStyle: TextStyle(
-                                color: kPrimaryLightColor), // Hint text color
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                              borderSide: BorderSide(
-                                  color: kPrimaryLightColor,
-                                  width: 0.25), // Border color
-                            ),
-                          ),
-                          onChanged: (value) {
-                            _about = value;
-                          },
-                        ),
-                      ]),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  _toggledataButtonState();
-                  if (isPressed == true) {
-                    Navigator.pushNamed(context, '/welcome');
-                  }
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  height: height * 0.060,
-                  // width: double.maxFinite,
-                  decoration: BoxDecoration(
-                    // border: Border.all(
-                    // color: Colors.red, width: 1, style: BorderStyle.solid),
-                    borderRadius: BorderRadius.circular(10),
-                    color: kPrimaryLightColor,
-                  ),
-                  child: const Text(
-                    'Continue',
-                    style: TextStyle(
-                        color: kPrimaryColor, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

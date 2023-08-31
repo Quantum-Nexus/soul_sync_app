@@ -23,8 +23,7 @@ MaterialColor getMaterialColor(Color color) {
 }
 
 // This is the primary swatch of the application
-MaterialColor kPrimarySwatch =
-    getMaterialColor(Color.fromRGBO(0, 0, 0, 1));
+MaterialColor kPrimarySwatch = getMaterialColor(Color.fromRGBO(0, 0, 0, 1));
 
 //--------------------C O L O R S--------------------
 
@@ -41,13 +40,12 @@ const Color kBackgroundColor = kPrimaryColor;
 
 const Color kYellowColor = Color(0xffFFF100);
 
-
 const Color kPinkColor = Color(0xffFF2093);
 
 const Color kGreyColor = Color.fromARGB(255, 31, 31, 31);
 
 // This is the text color of the application
-const Color kTextColor = Colors.white;  
+const Color kTextColor = Colors.white;
 
 const Color kBrightColor = Color.fromRGBO(233, 64, 87, 1);
 
@@ -65,90 +63,53 @@ const LinearGradient kPrimaryGradientColor = LinearGradient(
 
 //--------------------------S T Y L E S-----------------------
 
-TextStyle kHeadingStyle = GoogleFonts.playfairDisplay(
-    fontSize:24,
-    fontWeight: FontWeight.w800
-);
+TextStyle kHeadingStyle =
+    GoogleFonts.playfairDisplay(fontSize: 24, fontWeight: FontWeight.w800);
 
-TextStyle kDescriptionStyle = GoogleFonts.inconsolata(
-    fontSize:24,
-    fontWeight: FontWeight.w800
-);
+TextStyle kDescriptionStyle =
+    GoogleFonts.inconsolata(fontSize: 24, fontWeight: FontWeight.w800);
 
 TextStyle kLogo1Style = GoogleFonts.leagueSpartan(
-    fontSize:64,
-    fontWeight: FontWeight.w800,
-  color: kYellowColor
-
-);
+    fontSize: 64, fontWeight: FontWeight.w800, color: kYellowColor);
 
 TextStyle kLogo2Style = GoogleFonts.leagueSpartan(
-    fontSize:64,
-    fontWeight: FontWeight.w800,
-  color: kPinkColor
-
-);
+    fontSize: 64, fontWeight: FontWeight.w800, color: kPinkColor);
 
 TextStyle kTagStyle = GoogleFonts.quicksand(
-    fontSize:13,
+    fontSize: 13,
     height: -1,
     letterSpacing: 9,
     fontWeight: FontWeight.w600,
-    color: Colors.white
-
-);
+    color: Colors.white);
 
 TextStyle kAppbarStyle = GoogleFonts.leagueSpartan(
-    fontSize:16,
-    fontWeight: FontWeight.w800,
-  color: kPinkColor
-
-);
-
+    fontSize: 16, fontWeight: FontWeight.w800, color: kPinkColor);
 
 TextStyle kNameStyle = GoogleFonts.roboto(
-    fontSize:50,
-    fontWeight: FontWeight.w500,
-  color: Colors.white
-
-);
+    fontSize: 50, fontWeight: FontWeight.w500, color: Colors.white);
 TextStyle kHeadStyle = GoogleFonts.quicksand(
-    fontSize:24,
-    fontWeight: FontWeight.w600,
-  color: Colors.white70
-
-);
+    fontSize: 24, fontWeight: FontWeight.w600, color: Colors.white70);
 TextStyle kLeadingStyle = GoogleFonts.roboto(
-    fontSize:16,
-    fontWeight: FontWeight.w500,
-  color: Colors.white
-
-);
+    fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white);
 TextStyle kAboutStyle = GoogleFonts.roboto(
-    fontSize:20,
-    fontWeight: FontWeight.w500,
-  color: Colors.white
-
-);
+    fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white);
 
 TextStyle kWelcomeStyle = GoogleFonts.barlow(
-    fontSize: 33,
-    fontWeight: FontWeight.w800,
-  color: Colors.white
-
-);
+    fontSize: 33, fontWeight: FontWeight.w800, color: Colors.white);
 
 // ---------------- PROFILESCREEN STYLES -----------------
 
 TextStyle kDetailHeadStyle = GoogleFonts.barlow(
-    fontSize: 18,
-    fontWeight: FontWeight.w500,
-  color: Colors.white38
-);
+    fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white38);
 
 TextStyle kDetailStyle = GoogleFonts.barlow(
-  height: 1.2,
+    height: 1.2,
     fontSize: 20,
     fontWeight: FontWeight.w600,
-  color: Colors.white
-);
+    color: Colors.white);
+
+TextStyle kDHeadStyle = GoogleFonts.urbanist(
+    fontWeight: FontWeight.bold, color: Colors.white, fontSize: 54);
+
+TextStyle kDHead2Style = GoogleFonts.urbanist(
+    fontWeight: FontWeight.bold, color: Colors.white, fontSize: 45);
