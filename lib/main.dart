@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
       ),
       
       debugShowCheckedModeBanner: false,
-      initialRoute: '/splash', //isLoggedIn ? '/home' : '/splash',
+      initialRoute: '/confession', //isLoggedIn ? '/home' : '/splash',
       routes: {
         '/home': (context) => const Home(),
         '/onboarding': (context) => const OnboardingScreen(),
@@ -63,6 +63,7 @@ class MyApp extends StatelessWidget {
         '/aboutme': (context) =>  AboutMe(),
         '/gender': (context) =>  GenderInfo(),
         '/personaldetails': (context) => const PersonalDetails(),
+        '/confession': (context) =>  ConfessionFeedScreen(),
 
         //'/notification': (context) => const NotificationScreen(),
       },
