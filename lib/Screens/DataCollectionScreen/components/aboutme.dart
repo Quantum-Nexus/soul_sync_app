@@ -1,12 +1,35 @@
+import 'dart:convert';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:soul_sync_app/utils/constants/color.dart';
 
+import '../../LoginScreen/components/otp_screen.dart';
+
 class AboutMe extends StatefulWidget {
-  const AboutMe({super.key});
+  int age;
+  String gender;
+  int height;
+  String firstName;
+  String lastName;
+  String email;
+  String password;
+  String confirmPassword;
+  int number;
+
+  AboutMe({super.key, 
+  required this.age, 
+  required this.height,
+  required this.gender,
+  required this.firstName,
+  required this.lastName,
+  required this.email,
+  required this.password,
+  required this.confirmPassword,
+  required this.number
+  });
 
   @override
   State<AboutMe> createState() => _AboutMeState();
@@ -18,6 +41,7 @@ class _AboutMeState extends State<AboutMe> {
   String _about = '';
   bool isPressed = false;
   File? _pickedImage; // To store the picked image
+  bool isLoading = false;
 
   Future<void> _showImageSourceDialog(BuildContext context) async {
     await showDialog(
@@ -131,6 +155,94 @@ class _AboutMeState extends State<AboutMe> {
     print(_about);
   }
 
+  Future<void> signUpWithProfile() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    // if (!_isProfileValid()) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(content: Text("All fields are required")),
+    //   );
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    //   return;
+    // }
+
+    
+    print(widget.email);
+    final url = 'http://localhost:4000/api/v1/auth/sendotp';
+    
+    try {
+
+      final request = http.MultipartRequest('POST', Uri.parse(url));
+    request.fields.addAll({
+      'email': widget.email,
+    });
+  
+    //   if (image != null) {
+    //     var stream = new http.ByteStream(image!.openRead());
+    //   stream.cast();
+
+    //   var length = await image!.length();
+    //   final imageFile = await http.MultipartFile('image',stream,length);
+    //   request.files.add(imageFile);
+
+    //   var response = await request.send(); 
+    // }
+      final response = await request.send();
+      if (response.statusCode == 200) {
+        
+        Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => OTPScreen(
+          emailController: widget.email,
+          passwordController: widget.password,
+          confirmController: widget.confirmPassword,
+          firstNameController: widget.firstName,
+          lastNameController: widget.lastName,
+          dateOfBirthController: widget.age.toString(),
+          aboutController: _about,
+          contactNumberController: widget.number.toString(),
+          heightController: widget.height.toString(),
+          instagramUsernameController: _instagramId,
+          graduationYearController: '',
+          image: _pickedImage,
+          selectedGender: widget.gender,
+          )
+    ));
+        // Successfully signed up
+        // TODO: Navigate to OTPScreen or any other screen as needed
+      } else {
+        final responseBody = await response.stream.bytesToString();
+
+        if (responseBody.contains('message')) {
+        final errorMessage = json.decode(responseBody)['message'];
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorMessage)),
+        );
+      }
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred. Please try again later.')),
+      );
+    }
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  // bool _isProfileValid() {
+  //   return dateOfBirthController.text.isNotEmpty &&
+  //       aboutController.text.isNotEmpty &&
+  //       contactNumberController.text.isNotEmpty &&
+  //       heightController.text.isNotEmpty &&
+  //       instagramUsernameController.text.isNotEmpty &&
+  //       graduationYearController.text.isNotEmpty;
+  // }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -155,7 +267,9 @@ class _AboutMeState extends State<AboutMe> {
               padding: EdgeInsets.zero,
               constraints: BoxConstraints(),
               color: kPinkColor,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+              },
               icon: Icon(Icons.arrow_back_ios_new),
             ),
             Row(
@@ -313,9 +427,7 @@ class _AboutMeState extends State<AboutMe> {
             GestureDetector(
               onTap: () {
                 _toggledataButtonState();
-                if (isPressed == true) {
-                  Navigator.pushNamed(context, '/welcome');
-                }
+                signUpWithProfile();
               },
               child: Container(
                 alignment: Alignment.center,

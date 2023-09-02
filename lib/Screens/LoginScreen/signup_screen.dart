@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:soul_sync_app/Screens/DataCollectionScreen/components/mobile_no.dart';
 import 'package:soul_sync_app/Screens/DataCollectionScreen/userInfo.dart';
 import 'package:soul_sync_app/Screens/LoginScreen/components/otp_screen.dart';
 import 'package:soul_sync_app/Screens/LoginScreen/login_screen.dart';
@@ -30,7 +31,6 @@ class _SignupScreenState extends State<SignupScreen> {
   bool isConfirmPasswordValid = true;
 
   void signUp() async {
-
     // showDialog(context: context, builder: (context){
     //   return Center(
     //     child: CircularProgressIndicator(color: kSecondaryColor),
@@ -52,13 +52,13 @@ class _SignupScreenState extends State<SignupScreen> {
     }
 
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => ProfileForm(
-          confirmPassword: confirmController.text,
-            email: emailController.text,
-            firstName: firstNameController.text,
-            lastName: lastNameController.text,
-            password: passwordController.text,)
-    ));
+        builder: (context) => MobileNo(
+              firstName: firstNameController.text,
+              lastName: lastNameController.text,
+              email: emailController.text,
+              password: passwordController.text,
+              confirmPassword: confirmController.text,
+            )));
 
     const url = 'http://localhost:4000/api/v1/auth/sendotp';
 
@@ -84,7 +84,7 @@ class _SignupScreenState extends State<SignupScreen> {
     //       passwordController: passwordController.text,
     //     ),
     //   ));
-    // } 
+    // }
     // else {
     //   final responseBody = json.decode(response.body);
 
@@ -103,7 +103,6 @@ class _SignupScreenState extends State<SignupScreen> {
     //   }
     // }
   }
-  
 
   bool isFieldsValid() {
     setState(() {
@@ -233,8 +232,9 @@ class _SignupScreenState extends State<SignupScreen> {
                 // isPasswordValid: isPasswordValid,
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30.0,  ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 30.0,
+                ),
                 child: TextFormField(
                   obscureText: passwordVisible,
                   controller: confirmController,

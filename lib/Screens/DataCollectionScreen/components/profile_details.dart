@@ -38,7 +38,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                 padding: EdgeInsets.zero,
                 constraints: BoxConstraints(),
                 color: kPinkColor,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                },
                 icon: Icon(Icons.arrow_back_ios_new),
               ),
               Row(

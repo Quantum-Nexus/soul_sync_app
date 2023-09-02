@@ -1,10 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:soul_sync_app/Screens/DataCollectionScreen/components/aboutme.dart';
 import 'package:soul_sync_app/utils/constants/color.dart';
 
 class PersonalDetails extends StatefulWidget {
-  const PersonalDetails({super.key});
+  String gender;
+  String firstName;
+  String lastName;
+  String email;
+  String password;
+  String confirmPassword;
+  int number;
+
+  PersonalDetails(
+      {super.key,
+      required this.firstName,
+      required this.lastName,
+      required this.email,
+      required this.password,
+      required this.confirmPassword,
+      required this.number,
+      required this.gender});
 
   @override
   State<PersonalDetails> createState() => _PersonalDetailsState();
@@ -13,11 +30,17 @@ class PersonalDetails extends StatefulWidget {
 class _PersonalDetailsState extends State<PersonalDetails> {
   final _formKey = GlobalKey<FormState>();
   bool isPressed = false;
+  late int age;
 
   void _toggledataButtonState() {
     setState(() {
       if (_convertedHeight != 0 && dobController.text != "") {
         isPressed = !isPressed;
+
+        age = calculateAgeFromDOB(dobController.text.trim());
+
+        // Print the calculated age
+        print("age: $age");
       } else {
         if (dobController.text == "" && _convertedHeight != 0) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -45,6 +68,48 @@ class _PersonalDetailsState extends State<PersonalDetails> {
     });
     print(_convertedHeight.toInt());
     print(dobController.text);
+  }
+
+  int calculateAgeFromDOB(String dobString) {
+    try {
+      // Parse the DOB string into day, month, and year components
+      List<String> dateParts = dobString.split('-');
+
+      if (dateParts.length != 3) {
+        // Invalid DOB format
+        return -1;
+      }
+
+      int day = int.tryParse(dateParts[0]) ?? 0;
+      int month = int.tryParse(dateParts[1]) ?? 0;
+      int year = int.tryParse(dateParts[2]) ?? 0;
+
+      if (day == 0 || month == 0 || year == 0) {
+        // Invalid day, month, or year
+        return -1;
+      }
+
+      // Get the current date
+      DateTime currentDate = DateTime.now();
+
+      // Create a DateTime object for the DOB
+      DateTime dob = DateTime(year, month, day);
+
+      // Calculate the age
+      int age = currentDate.year - dob.year;
+
+      // Adjust age if the birthday hasn't occurred yet this year
+      if (currentDate.month < dob.month ||
+          (currentDate.month == dob.month && currentDate.day < dob.day)) {
+        age--;
+      }
+
+      return age;
+    } catch (e) {
+      // Handle any potential errors
+      print('Error calculating age: $e');
+      return -1; // Return -1 for error
+    }
   }
 
   String dob = '';
@@ -79,56 +144,56 @@ class _PersonalDetailsState extends State<PersonalDetails> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      resizeToAvoidBottomInset:
-          false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: kPrimaryColor,
       body: Container(
         width: width,
-        margin: const EdgeInsets.symmetric( vertical: 50,horizontal: 20),
+        margin: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
         padding: EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                padding: EdgeInsets.zero,
-                constraints: BoxConstraints(),
-                color: kPinkColor,
-                onPressed: () {},
-                icon: Icon(Icons.arrow_back_ios_new),
-              ),
-              Row(
-                children: [
-                  Text(
-                    "2 ",
-                    style: GoogleFonts.barlow(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold
-                      ),
-                  ),
-                  Text(" OF ", 
-                  style: GoogleFonts.barlow(
-                      color: Colors.white54,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold
-                      ),
-                  ),
-                  Text("3", 
-                  style: GoogleFonts.barlow(
-                      color: Colors.white54,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold
-                      ),
-                  )
-                ],
-              ),
-              SizedBox()
-            ],
-          ),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: BoxConstraints(),
+                  color: kPinkColor,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.arrow_back_ios_new),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "2 ",
+                      style: GoogleFonts.barlow(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      " OF ",
+                      style: GoogleFonts.barlow(
+                          color: Colors.white54,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "3",
+                      style: GoogleFonts.barlow(
+                          color: Colors.white54,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+                SizedBox()
+              ],
+            ),
             // SizedBox(
             //   height: 0,
             // ),
@@ -202,12 +267,14 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                             labelText: 'Date of Birth',
                             labelStyle: TextStyle(color: Colors.white),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white, width: 0.25),
+                              borderSide:
+                                  BorderSide(color: Colors.white, width: 0.25),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10)),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: kPrimaryLightColor, width: 0.25),
+                              borderSide: BorderSide(
+                                  color: kPrimaryLightColor, width: 0.25),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10)),
                             ),
@@ -219,7 +286,8 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                         style: const TextStyle(color: kPrimaryLightColor),
                         decoration: InputDecoration(
                           focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: kPrimaryLightColor, width: 0.25),
+                            borderSide: BorderSide(
+                                color: kPrimaryLightColor, width: 0.25),
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
                           hintText: '000(in cm) & 0.0 (in feet)',
@@ -230,7 +298,8 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                               color: kPrimaryLightColor), // Hint text color
                           enabledBorder: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(10)),
-                            borderSide: BorderSide(color: kPrimaryLightColor, width: 0.25),
+                            borderSide: BorderSide(
+                                color: kPrimaryLightColor, width: 0.25),
                             // Border color
                           ),
                           suffixIcon: Padding(
@@ -288,7 +357,19 @@ class _PersonalDetailsState extends State<PersonalDetails> {
               onTap: () {
                 _toggledataButtonState();
                 if (isPressed == true) {
-                  Navigator.pushNamed(context, '/aboutme');
+                  print(widget.email);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AboutMe(
+                            gender: widget.gender,
+                            age: age,
+                            height: _convertedHeight.toInt(),
+                            firstName: widget.firstName,
+                            lastName: widget.lastName,
+                            email: widget.email,
+                            password: widget.password,
+                            number: widget.number,
+                            confirmPassword: widget.confirmPassword,
+                          )));
                 }
               },
               child: Container(

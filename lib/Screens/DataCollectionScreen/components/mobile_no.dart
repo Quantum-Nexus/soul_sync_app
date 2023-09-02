@@ -2,10 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:soul_sync_app/Screens/DataCollectionScreen/components/gender_info.dart';
 import 'package:soul_sync_app/utils/constants/color.dart';
 
 class MobileNo extends StatefulWidget {
-  const MobileNo({super.key});
+  String firstName;
+  String lastName;
+  String email;
+  String password;
+  String confirmPassword;
+
+  MobileNo(
+      {super.key,
+      required this.firstName,
+      required this.lastName,
+      required this.email,
+      required this.password,
+      required this.confirmPassword});
 
   @override
   State<MobileNo> createState() => _MobileNoState();
@@ -20,7 +33,10 @@ class _MobileNoState extends State<MobileNo> {
     setState(() {
       if (_phoneNumber == "") {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please enter your mobile number."), backgroundColor: kPinkColor,),
+          const SnackBar(
+            content: Text("Please enter your mobile number."),
+            backgroundColor: kPinkColor,
+          ),
         );
         return;
       } else {
@@ -45,58 +61,17 @@ class _MobileNoState extends State<MobileNo> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  constraints: BoxConstraints(),
-                  color: kPinkColor,
-                  onPressed: () {},
-                  icon: Icon(Icons.arrow_back_ios_new),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "1 ",
-                      style: GoogleFonts.barlow(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                        ),
-                    ),
-                    Text(" OF ", 
-                    style: GoogleFonts.barlow(
-                        color: Colors.white54,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                        ),
-                    ),
-                    Text("4", 
-                    style: GoogleFonts.barlow(
-                        color: Colors.white54,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                        ),
-                    )
-                  ],
-                ),
-                SizedBox()
-              ],
-            ),
-              // SizedBox(
-              //   height: height * 0.120,
-              // ),
+              SizedBox(
+                height: height * 0.120,
+              ),
               Padding(
                   padding: EdgeInsets.symmetric(vertical: height * 0.0045),
-                  child: Text(
-                    "My Mobile",
-                    style: GoogleFonts.quicksand(
-                        color: kPrimaryLightColor, fontSize: height * 0.065),
-                  )),
+                  child: Text("My Mobile", style: kDHeadStyle)),
               const Text(
                 "Please enter your valid phone number. We will verify your account. ",
-                style: TextStyle(color: Colors.white,),
+                style: TextStyle(
+                  color: Colors.white,
+                ),
               ),
               Container(
                   margin: EdgeInsets.symmetric(vertical: height * 0.045),
@@ -111,7 +86,6 @@ class _MobileNoState extends State<MobileNo> {
                     cursorColor: kPrimaryLightColor,
                     controller: _phoneNumberController,
                     decoration: const InputDecoration(
-
                       // iconColor:  Colors.white,
                       // fillColor: Colors.white,
                       hintText: '000-000-0000',
@@ -158,8 +132,16 @@ class _MobileNoState extends State<MobileNo> {
               GestureDetector(
                 onTap: () {
                   _toggledataButtonState();
-                  if( isPressed == true) {
-                    Navigator.pushNamed(context, '/gender');
+                  if (isPressed == true) {
+                    print(widget.email);
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => GenderInfo(
+                            firstName: widget.firstName,
+                            lastName: widget.lastName,
+                            email: widget.email,
+                            password: widget.password,
+                            confirmPassword: widget.confirmPassword,
+                            number: int.parse(_phoneNumber))));
                   }
                 },
                 child: Container(

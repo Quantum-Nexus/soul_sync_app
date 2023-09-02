@@ -1,7 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,7 +6,6 @@ import 'package:soul_sync_app/Screens/Home/components/appBar.dart';
 import 'package:soul_sync_app/Screens/Home/components/myDrawer.dart';
 import 'package:soul_sync_app/utils/constants/color.dart';
 import 'package:http/http.dart' as http;
-
 import '../../Model/userModel.dart';
 import 'components/card.dart';
 
@@ -25,11 +21,15 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   String? storedUserName;
   String? storedGender;
+  bool allCardsSwiped = false;
+  Future<List<Candidate>>? candidatesFuture = Future.value([]);
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
     loadUserInfo();
+    candidatesFuture = fetchCandidates();
   }
 
   void loadUserInfo() async {
@@ -51,8 +51,6 @@ class _HomeState extends State<Home> {
     final jwtToken = prefs.getString('jwt_token') ?? '';
 
     if (jwtToken.isEmpty) {
-      // Handle the case where JWT token is not available
-      // You might want to redirect to the login screen or handle it differently
       print('JWT token is missing');
       return;
     }
@@ -77,7 +75,6 @@ class _HomeState extends State<Home> {
 
         print(responseBody);
 
-        // Store the JWT token securely
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('jwt_token', jwtToken);
 
@@ -98,11 +95,11 @@ class _HomeState extends State<Home> {
   Future<List<Candidate>> fetchCandidates() async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
-    final response = await http
-        .get(Uri.parse('http://localhost:4000/api/v1/fetch/fetchallusers'),
-        headers: {'Authorization': 'Bearer $jwtToken'},
-        );
+
+    final response = await http.get(
+      Uri.parse('http://localhost:4000/api/v1/fetch/fetchallusers'),
+      headers: {'Authorization': 'Bearer $jwtToken'},
+    );
 
     if (response.statusCode == 200) {
       final List<dynamic> candidateData = json.decode(response.body);
@@ -113,20 +110,21 @@ class _HomeState extends State<Home> {
     }
   }
 
-  List<Candidate> filterCandidatesByGender(
-      List<Candidate> candidates, String userGender) {
-    // Navigator.pop(context);
-    if (userGender == 'Male') {
-      return candidates
-          .where((candidate) => candidate.gender == 'Female')
-          .toList();
-    } else if (userGender == 'Female') {
-      return candidates
-          .where((candidate) => candidate.gender == 'Male')
-          .toList();
-    } else {
-      return candidates;
-    }
+  Future<void> fetchData() async {
+    if (isLoading) return;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    final candidates = await fetchCandidates();
+
+    setState(() {
+      swipedProfiles.clear();
+      candidatesFuture = Future.value(candidates);
+      isLoading = false;
+      allCardsSwiped = candidates.isEmpty;
+    });
   }
 
   @override
@@ -134,7 +132,8 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
-        child: MyAppBar()),
+        child: MyAppBar(),
+      ),
       backgroundColor: kPrimaryColor,
       drawer: AppDrawer(),
       body: Column(
@@ -148,13 +147,14 @@ class _HomeState extends State<Home> {
                 Text(
                   "Hello, " + (storedUserName ?? "Guest") + "👋",
                   style: kWelcomeStyle,
-                ), // Display username or "Guest" if not available
+                ),
                 Text(
                   "Here's your swipe list for today.",
                   style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.white),
+                    fontSize: 18,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.white,
+                  ),
                 ),
               ],
             ),
@@ -162,10 +162,10 @@ class _HomeState extends State<Home> {
           Flexible(
             child: Stack(
               children: [
-                //Center(child: CircularProgressIndicator()),
                 FutureBuilder<List<Candidate>>(
-                  future: fetchCandidates(),
+                  future: candidatesFuture,
                   builder: (context, snapshot) {
+                    int cardlength = snapshot.data!.length;
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
@@ -173,26 +173,12 @@ class _HomeState extends State<Home> {
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return Center(child: Text('No candidates available.'));
                     } else {
-                      final filteredCandidates = filterCandidatesByGender(
-                          snapshot.data!, storedGender ?? "");
-
-                      if (filteredCandidates.isEmpty) {
-                        return Center(
-                          child: Text(
-                            'No more swipes',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        );
-                      }
-
                       return CardSwiper(
                         controller: _controller,
-                        cardsCount: snapshot.data!.length,
+                        cardsCount: cardlength,
                         maxAngle: 60,
                         isLoop: false,
+                        initialIndex: 0,
                         allowedSwipeDirection:
                             AllowedSwipeDirection.only(left: true, right: true),
                         onSwipe: (previousIndex, currentIndex, direction) {
@@ -207,12 +193,13 @@ class _HomeState extends State<Home> {
                           return true;
                         },
                         onUndo: (previousIndex, currentIndex, direction) {
-                          // Handle card undo logic
                           print("swiped left");
                           return true;
                         },
-                        
-                        numberOfCardsDisplayed: 2,
+                        onEnd: () {
+                          fetchData();
+                        },
+                        numberOfCardsDisplayed: (cardlength > 1) ? 2 : 1,
                         padding: const EdgeInsets.all(16.0),
                         cardBuilder: (
                           context,
@@ -220,41 +207,15 @@ class _HomeState extends State<Home> {
                           horizontalThresholdPercentage,
                           verticalThresholdPercentage,
                         ) {
-                          if (index >= filteredCandidates.length) {
-                            print("no swipessssssss");
-                            return Center(
-                              child: Text(
-                                'No swipessssssssss',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            );
-                          } else {
-                            final candidate = filteredCandidates[index];
-                            if (swipedProfiles.contains(candidate.id)) {
-                              return Container(); // Skip this profile if it's already swiped
-                            }
-                            return ExampleCard(
-                              isLiked: _isLiked,
-                              candidate: candidate,
-                              onLike: () => sendID(candidate),
-                            );
+                          final candidate = snapshot.data![index];
+                          if (swipedProfiles.contains(candidate.id)) {
+                            return Container();
                           }
-                          //else {
-                          //   return Container();
-                          //   //Navigator.pop(context);
-                          //   return Center(
-                          //     child: Text(
-                          //       'No more swipes',
-                          //       style: TextStyle(
-                          //         fontSize: 18,
-                          //         fontWeight: FontWeight.bold,
-                          //       ),
-                          //     ),
-                          //   );
-                          // }
+                          return ExampleCard(
+                            isLiked: _isLiked,
+                            candidate: candidate,
+                            onLike: () => sendID(candidate),
+                          );
                         },
                       );
                     }
@@ -264,25 +225,8 @@ class _HomeState extends State<Home> {
             ),
           ),
           SizedBox(
-              height:
-                  16), // Add spacing between the card swiper and like button
-          // IconButton(
-          //   onPressed: () {
-
-          //       sendID(_currentCandidate!); // Send the selected candidate
-          //       setState(() {
-          //         _isLiked = !_isLiked; // Toggle the like status
-          //       });
-
-          //   },
-          //   icon: Icon(
-          //     _isLiked ? Icons.favorite : Icons.favorite_border,
-          //   ),
-          //   color: _isLiked
-          //       ? Colors.red
-          //       : Colors.grey, // Change colors based on like status
-          //   iconSize: 40, // Adjust icon size as needed
-          // ),
+            height: 16,
+          ),
         ],
       ),
     );

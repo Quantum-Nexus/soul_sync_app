@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:soul_sync_app/Screens/DataCollectionScreen/components/personal_details.dart';
 import 'package:soul_sync_app/utils/constants/color.dart';
 
 class GenderInfo extends StatefulWidget {
-  const GenderInfo({super.key});
+  String firstName;
+  String lastName;
+  String email;
+  String password;
+  String confirmPassword;
+  int number;
+
+  GenderInfo(
+      {super.key,
+      required this.firstName,
+      required this.lastName,
+      required this.email,
+      required this.password,
+      required this.confirmPassword,
+      required this.number});
 
   @override
   State<GenderInfo> createState() => _GenderInfoState();
@@ -60,7 +75,9 @@ class _GenderInfoState extends State<GenderInfo> {
                   padding: EdgeInsets.zero,
                   constraints: BoxConstraints(),
                   color: kPinkColor,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                   icon: Icon(Icons.arrow_back_ios_new),
                 ),
                 Row(
@@ -68,24 +85,23 @@ class _GenderInfoState extends State<GenderInfo> {
                     Text(
                       "1 ",
                       style: GoogleFonts.barlow(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                        ),
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
                     ),
-                    Text(" OF ", 
-                    style: GoogleFonts.barlow(
-                        color: Colors.white54,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                        ),
+                    Text(
+                      " OF ",
+                      style: GoogleFonts.barlow(
+                          color: Colors.white54,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
                     ),
-                    Text("3", 
-                    style: GoogleFonts.barlow(
-                        color: Colors.white54,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                        ),
+                    Text(
+                      "3",
+                      style: GoogleFonts.barlow(
+                          color: Colors.white54,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
@@ -134,7 +150,15 @@ class _GenderInfoState extends State<GenderInfo> {
               onTap: () {
                 _toggledataButtonState();
                 if (isPressed == true) {
-                  Navigator.pushNamed(context, '/personaldetails');
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => PersonalDetails(
+                          gender: selectedOption,
+                          firstName: widget.firstName,
+                          lastName: widget.lastName,
+                          email: widget.email,
+                          password: widget.password,
+                          confirmPassword: widget.confirmPassword,
+                          number: widget.number)));
                 }
               },
               child: Container(
