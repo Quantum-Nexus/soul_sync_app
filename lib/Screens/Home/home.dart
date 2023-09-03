@@ -22,6 +22,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Candidate? currentCandidate;
   String? storedUserName;
   String? storedGender;
   bool allCardsSwiped = false;
@@ -222,7 +223,7 @@ class _HomeState extends State<Home> {
                       return Text('Error: ${snapshot.error}');
                     } else if (snapshot.data!.isEmpty) {
                       // Check if data is empty
-                      return Center(child: Text('No candidates available.'));
+                      return Center(child: Text('No candidates available.', style: TextStyle(color: Colors.white),));
                     } else {
                       final List<Candidate> candidates = snapshot
                           .data!; // Use the non-null assertion operator (!)
@@ -235,8 +236,10 @@ class _HomeState extends State<Home> {
                         allowedSwipeDirection:
                             AllowedSwipeDirection.only(left: true, right: true),
                         onSwipe: (previousIndex, currentIndex, direction) {
-                          final candidate = snapshot.data![currentIndex!];
+                          //final candidate = snapshot.data![currentIndex!];
+                          final candidate = snapshot.data![previousIndex!];
                           if (direction == CardSwiperDirection.right) {
+                            
                             sendID(candidate);
                             print("Swiped right");
                             setState(() {
