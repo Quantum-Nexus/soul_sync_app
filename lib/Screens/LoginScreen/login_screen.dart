@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -25,7 +26,11 @@ class _LoginScreenState extends State<LoginScreen> {
   void signIn() async {
     showDialog(context: context, builder: (context){
       return Center(
-        child: CircularProgressIndicator(color: kSecondaryColor),
+        child: Lottie.asset(
+          'assets/images/loader.json', 
+          width: 300, 
+          height: 300, 
+        ),
       );
     });
 
@@ -42,11 +47,10 @@ class _LoginScreenState extends State<LoginScreen> {
     }),
   );
   
-  Navigator.pop(context);
   print(response);
   
     if (response.statusCode == 200) {
-      
+    Navigator.pop(context);
     final responseBody = json.decode(response.body);
     print(responseBody);
     final user = responseBody['user'];

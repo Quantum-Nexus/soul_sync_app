@@ -71,15 +71,15 @@ class ExampleCard extends StatelessWidget {
                               ),
                             ],
                           ),
-                          Row(
-                            children: [
-                              Text('Grad. Yr: ', style: kHeadStyle),
-                              Text(candidate.gradYear.toString(),
-                                  style: kLeadingStyle),
-                            ],
-                          ),
+                          // Row(
+                          //   children: [
+                          //     Text('Grad. Yr: ', style: kHeadStyle),
+                          //     Text(candidate.gradYear.toString(),
+                          //         style: kLeadingStyle),
+                          //   ],
+                          // ),
                           SizedBox(height: 8),
-                          Text("About", style: kHeadStyle),
+                          //Text("About", style: kHeadStyle),
                           SizedBox(height: 8),
                           Text(
                             candidate.about ?? "aboutttt",

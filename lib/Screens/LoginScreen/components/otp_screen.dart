@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 import 'package:soul_sync_app/Screens/Home/home.dart';
 import 'package:soul_sync_app/Screens/LoginScreen/login_screen.dart';
 import 'package:soul_sync_app/utils/constants/color.dart';
@@ -90,6 +91,15 @@ class _OTPScreenState extends State<OTPScreen> {
 
   String otp = '';
   void verifyOTP() async{
+    showDialog(context: context, builder: (context){
+      return Center(
+        child: Lottie.asset(
+          'assets/images/loader.json', 
+          width: 300, 
+          height: 300, 
+        ),
+      );
+    });
   
   for (var controller in _controllers) {
     otp += controller.text;
@@ -138,6 +148,7 @@ class _OTPScreenState extends State<OTPScreen> {
     }
       var response = await request.send(); 
   if (response.statusCode == 200) {
+    Navigator.pop(context);
   ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         duration: Duration(seconds: 5),

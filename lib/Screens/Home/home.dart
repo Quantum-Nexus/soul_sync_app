@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soul_sync_app/Screens/Home/components/appBar.dart';
 import 'package:soul_sync_app/Screens/Home/components/myDrawer.dart';
@@ -24,6 +27,9 @@ class _HomeState extends State<Home> {
   bool allCardsSwiped = false;
   Future<List<Candidate>>? candidatesFuture = Future.value([]);
   bool isLoading = false;
+  bool displaylike = false;
+  bool displaycross = false;
+  late Timer emoji;
 
   @override
   void initState() {
@@ -96,12 +102,27 @@ class _HomeState extends State<Home> {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
 
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+          child: Lottie.asset(
+            'assets/images/loader.json',
+            width: 300,
+            height: 300,
+          ),
+        );
+      },
+      barrierDismissible: false,
+    );
+
     final response = await http.get(
       Uri.parse('http://localhost:4000/api/v1/fetch/fetchallusers'),
       headers: {'Authorization': 'Bearer $jwtToken'},
     );
 
     if (response.statusCode == 200) {
+      Navigator.pop(context);
       final List<dynamic> candidateData = json.decode(response.body);
 
       return candidateData.map((json) => Candidate.fromJson(json)).toList();
@@ -127,6 +148,35 @@ class _HomeState extends State<Home> {
     });
   }
 
+  Widget displaycrossEmoji() {
+    if (displaycross) {
+      return Container(
+        width: 150,
+        //color: Colors.red,
+        child: Lottie.asset('assets/images/dislike.json',
+            //width: 100,
+            fit: BoxFit.fitWidth // Replace with your Lottie animation file
+            ),
+      );
+    } else {
+      return Container(); // Return an empty container when display is false
+    }
+  }
+
+  Widget displayHeartEmoji() {
+    if (displaylike) {
+      return Container(
+        width: 200,
+        //height: 500,
+        child: Lottie.asset(
+          'assets/images/like2.json',
+        ),
+      );
+    } else {
+      return Container(); // Return an empty container when display is false
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,58 +186,79 @@ class _HomeState extends State<Home> {
       ),
       backgroundColor: kPrimaryColor,
       drawer: AppDrawer(),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 30.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Hello, " + (storedUserName ?? "Guest") + "👋",
-                  style: kWelcomeStyle,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 30.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Hello, " + (storedUserName ?? "Guest") + "👋",
+                      style: kWelcomeStyle,
+                    ),
+                    Text(
+                      "Here's your swipe list for today.",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w300,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  "Here's your swipe list for today.",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w300,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Flexible(
-            child: Stack(
-              children: [
-                FutureBuilder<List<Candidate>>(
+              ),
+              Flexible(
+                child: FutureBuilder<List<Candidate>>(
                   future: candidatesFuture,
                   builder: (context, snapshot) {
-                    int cardlength = snapshot.data!.length;
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
+                    } else if (snapshot.hasError || snapshot.data == null) {
+                      // Check if data is null
                       return Text('Error: ${snapshot.error}');
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    } else if (snapshot.data!.isEmpty) {
+                      // Check if data is empty
                       return Center(child: Text('No candidates available.'));
                     } else {
+                      final List<Candidate> candidates = snapshot
+                          .data!; // Use the non-null assertion operator (!)
+                      int cardlength = candidates.length;
                       return CardSwiper(
                         controller: _controller,
                         cardsCount: cardlength,
                         maxAngle: 60,
-                        isLoop: false,
                         initialIndex: 0,
                         allowedSwipeDirection:
                             AllowedSwipeDirection.only(left: true, right: true),
                         onSwipe: (previousIndex, currentIndex, direction) {
                           final candidate = snapshot.data![currentIndex!];
                           if (direction == CardSwiperDirection.right) {
-                            print("Swiped right");
                             sendID(candidate);
+                            print("Swiped right");
+                            setState(() {
+                              displaylike = true;
+                            });
+
+                            emoji = Timer(Duration(milliseconds: 1000), () {
+                              setState(() {
+                                displaylike = false;
+                              });
+                            });
                           } else {
                             print("Swiped Left");
+                            setState(() {
+                              displaycross = true;
+                            });
+
+                            emoji = Timer(Duration(milliseconds: 1000), () {
+                              setState(() {
+                                displaycross = false;
+                              });
+                            });
                           }
 
                           return true;
@@ -221,11 +292,24 @@ class _HomeState extends State<Home> {
                     }
                   },
                 ),
-              ],
-            ),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+            ],
           ),
-          SizedBox(
-            height: 16,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Align(
+                  alignment: Alignment.centerLeft, child: displaycrossEmoji()),
+              SizedBox(
+                width: 10,
+              ),
+              Align(
+                  alignment: Alignment.centerRight, child: displayHeartEmoji()),
+            ],
           ),
         ],
       ),
