@@ -8,9 +8,10 @@ import '../../utils/constants/color.dart';
 import '../Home/home.dart';
 import 'components/inputField.dart';
 
-
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key,});
+  const LoginScreen({
+    super.key,
+  });
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -21,69 +22,65 @@ class _LoginScreenState extends State<LoginScreen> {
   final passwordController = TextEditingController();
   //final storage = const FlutterSecureStorage();
 
-  
-
   void signIn() async {
-    showDialog(context: context, builder: (context){
-      return Center(
-        child: Lottie.asset(
-          'assets/images/loader.json', 
-          width: 300, 
-          height: 300, 
-        ),
-      );
-    });
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(
+            child: Lottie.asset(
+              'assets/images/loader.json',
+              width: 300,
+              height: 300,
+            ),
+          );
+        });
 
-     const url ='http://localhost:4000/api/v1/auth/login'; // Replace with your actual API endpoint
+    const url =
+        'http://localhost:4000/api/v1/auth/login'; // Replace with your actual API endpoint
 
-  final response = await http.post(
-    Uri.parse(url),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode({
-      'email': emailController.text,
-      'password': passwordController.text,
-      
-      
-    }),
-  );
-  
-  print(response);
-  
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'email': emailController.text,
+        'password': passwordController.text,
+      }),
+    );
+
+    print(response);
+
     if (response.statusCode == 200) {
-   // Navigator.pop(context);
-    final responseBody = json.decode(response.body);
-    print(responseBody);
-    final user = responseBody['user'];
-    final firstName = user['firstName'];
-    final lastName = user['lastName'];
-    final gender = user['gender']; // Access the 'firstName' field
-    print(firstName);
-  
-    final jwtToken = responseBody['token'];
+      // Navigator.pop(context);
+      final responseBody = json.decode(response.body);
+      print(responseBody);
+      final user = responseBody['user'];
+      final firstName = user['firstName'];
+      final lastName = user['lastName'];
+      final gender = user['gender']; // Access the 'firstName' field
+      print(firstName);
 
-    // Store the JWT token securely
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('jwt_token', jwtToken);
-    prefs.setString('first_name', firstName);
-    prefs.setString('last_name', lastName);
-    prefs.setString('gender', gender);
+      final jwtToken = responseBody['token'];
 
-      Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) =>  Home()));
+      // Store the JWT token securely
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('jwt_token', jwtToken);
+      prefs.setString('first_name', firstName);
+      prefs.setString('last_name', lastName);
+      prefs.setString('gender', gender);
 
-  } else{
-    final responseBody = json.decode(response.body);
-    if (responseBody.containsKey('message')) {
-      final errorMessage = responseBody['message'];
-      ScaffoldMessenger.of(context).showSnackBar(
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => Home()));
+    } else {
+      final responseBody = json.decode(response.body);
+      if (responseBody.containsKey('message')) {
+        final errorMessage = responseBody['message'];
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(errorMessage)),
         );
-    }    
-    
+      }
+    }
   }
 
-    
-  }
   @override
   void dispose() {
     emailController.dispose();
@@ -91,7 +88,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,39 +96,37 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(70.0),
-                child: Text(
-                  'Soul Sync',
-                  style: kLogo1Style,
+              SizedBox(
+                height: 100,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width*0.8,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Welcome Back', style: kDHead2Style),
+                    Padding(
+                      padding: const EdgeInsets.only(left:5.0),
+                      child: Text(
+                        "We've missed you! Please sign in to catch up on what you've missed",
+                        //textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'Rubik Regular',
+                            color: Colors.white54),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-             // SizedBox(height: 10,),
-              const Center(
-                  child: Text(
-                    'Login',
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontFamily: 'Rubik Medium',
-                        color: kSecondaryLightColor
-                    ),
-                  )),
-              const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(15.0),
-                    child: Text(
-                      'Enter Your Email and Password',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontFamily: 'Rubik Regular',
-                          color: kTextColor),
-                    ),
-                  )),
+              SizedBox(height: 30,),
+              
               Padding(
-                padding: const EdgeInsets.only(top: 30.0),
+                padding: const EdgeInsets.only(top: 50.0),
                 child: InputField(
                   passwordcontroller: passwordController,
-                  emailcontroller: emailController,),
+                  emailcontroller: emailController,
+                ),
               ),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -144,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         fontFamily: 'Rubik Regular',
-                        color: kSecondaryLightColor,
+                        color: kPrimaryLightColor,
                         //decoration: TextDecoration.underline,
                       ),
                     ),
@@ -155,14 +149,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 100,
               ),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   signIn();
                 },
                 child: Container(
                   width: 300,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: kSecondaryLightColor,
+                    color: kPrimaryLightColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Center(
@@ -171,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                         fontFamily: 'Rubik Regular',
                         fontSize: 20,
-                        color: kPrimaryColor,
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -182,25 +176,26 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children:  [
+                  children: [
                     const Text(
                       'Dont have an account?',
                       style: TextStyle(
                           fontSize: 16,
                           fontFamily: 'Rubik Regular',
-                          color: kSecondaryLightColor),
+                          color: kPrimaryLightColor),
                     ),
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const SignupScreen()));
+                            builder: (context) => const SignupScreen()));
                       },
                       child: const Text(
-                        ' Signup',
+                        ' Register here',
                         style: TextStyle(
                             fontSize: 16,
+                            fontWeight: FontWeight.bold,
                             fontFamily: 'Rubik Medium',
-                            color: Colors.white),
+                            color: kPinkColor),
                       ),
                     )
                   ],
