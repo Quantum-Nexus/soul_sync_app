@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:soul_sync_app/Screens/ConfessionScreen/addConfession.dart';
 import 'package:soul_sync_app/Screens/ConfessionScreen/confessionFeed.dart';
 import 'package:soul_sync_app/Screens/DataCollectionScreen/components/aboutme.dart';
 
@@ -50,7 +49,7 @@ class MyApp extends StatelessWidget {
       ),
       
       debugShowCheckedModeBanner: false,
-      initialRoute: '/home', //isLoggedIn ? '/home' : '/splash',
+      initialRoute: '/splash', //isLoggedIn ? '/home' : '/splash',
       routes: {
         '/home': (context) => const Home(),
         '/onboarding': (context) => const OnboardingScreen(),

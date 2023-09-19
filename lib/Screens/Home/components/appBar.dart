@@ -14,15 +14,20 @@ class MyAppBar extends StatelessWidget {
       onTap: () {
         // Handle edit button action here
       },
-      child: Container(
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: kGreyColor, // Customize the color as needed
-        ),
-        child: Icon(
-          Icons.favorite_border,
-          color: Colors.white, // Change icon color
+      child: GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(context, '/confession');
+        },
+        child: Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: kGreyColor, // Customize the color as needed
+          ),
+          child: Icon(
+            Icons.favorite_border,
+            color: Colors.white, // Change icon color
+          ),
         ),
       ),
     ),

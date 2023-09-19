@@ -1,7 +1,10 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soul_sync_app/controllers/confession_controller.dart';
 import 'package:soul_sync_app/utils/constants/color.dart';
 
@@ -20,47 +23,150 @@ class _ConfessionFeedScreenState extends State<ConfessionFeedScreen> {
   // Create a TextEditingController
   final TextEditingController _textController = TextEditingController();
 
+
+  bool _isSubmitting = false; // Track whether a submission is in progress.
+
   @override
   void dispose() {
-    // Dispose of the controller when no longer needed to prevent memory leaks
     _textController.dispose();
     super.dispose();
   }
-
-  // Function to show the pop-up dialog
-  Future<void> _showConfessionDialog(BuildContext context) async {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // Content of the pop-up dialog
-        return AlertDialog(
-          title: Text("Write a Confession"),
-          content: TextField(
-            maxLines: 5,
-            controller: _textController,
-            decoration: InputDecoration(
-              hintText: "Type your confession here",
-            ),
+Future<void> _showConfessionDialog(BuildContext context) async {
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Write a Confession"),
+        content: TextField(
+          maxLines: 5,
+          controller: _textController,
+          decoration: InputDecoration(
+            hintText: "Type your confession here",
           ),
-          actions: <Widget>[
-            TextButton(
-              child: Text("Cancel"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text(
+              "Cancel",
+              style: TextStyle(
+                color: kPinkColor,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            TextButton(
-              child: Text("Submit"),
-              onPressed: () {
-                String confessiontxt = _textController.text;
-                confessionController.addConfession(confessiontxt);
-                Navigator.of(context).pop(); 
-              },
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text(
+              "Submit",
+              style: TextStyle(
+                color: kPinkColor,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ],
+            onPressed: () async {
+              String confessiontxt = _textController.text;
+              await _submitConfession(confessiontxt);
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+  // Future<void> _showConfessionDialog(BuildContext context) async {
+  //   return showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text("Write a Confession"),
+  //         content: TextField(
+  //           maxLines: 5,
+  //           controller: _textController,
+  //           decoration: InputDecoration(
+  //             hintText: "Type your confession here",
+  //           ),
+  //         ),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: Text(
+  //               "Cancel",
+  //               style: TextStyle(
+  //                 color: kPinkColor,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //           TextButton(
+  //             child: Text(
+  //               "Submit",
+  //               style: TextStyle(
+  //                 color: kPinkColor,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //             onPressed: _isSubmitting
+  //                 ? null // Disable the button when submitting.
+  //                 : () async {
+  //                     String confessiontxt = _textController.text;
+  //                     await _submitConfession(confessiontxt);
+  //                   },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
+  Future<void> _submitConfession(String confessionText) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+    setState(() {
+      _isSubmitting = true; // Start the submission, disable the button.
+    });
+
+    try {
+      debugPrint(jwtToken);
+      final response = await http.post(Uri.parse('http://localhost:4000/api/v1/addconfession'),
+        body: json.encode({'message': confessionText}),
+        headers: {'Content-type':'application/json','Authorization': 'Bearer $jwtToken'},
+      );
+
+      debugPrint(response.body);
+      // if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Confession submitted successfully.'),
+          ),
         );
-      },
-    );
+
+        _textController.clear();
+        confessionController.fetchConfessions();
+      // } else {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(
+      //       content:
+      //           Text('Failed to submit confession. Please try again later.'),
+      //     ),
+      //   );
+      // }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An error occurred: $e'),
+        ),
+      );
+    } finally {
+      setState(() {
+        _isSubmitting = false;
+        _textController.clear();
+        Navigator.pop(context); // Submission completed, enable the button.
+      });
+    }
   }
 
   @override
@@ -111,8 +217,10 @@ class _ConfessionFeedScreenState extends State<ConfessionFeedScreen> {
                   color: kPrimaryLightColor, fontSize: height * 0.018),
             ),
             Expanded(child: GetX<ConfessionController>(builder: (controller) {
+              debugPrint((controller.confessions.length).toString());
               return ListView.builder(
                   itemCount: controller.confessions.length,
+                 
                   itemBuilder: (context, index) {
                     return Card(
                       color: index.isEven ? kPinkColor : kYellowColor,
