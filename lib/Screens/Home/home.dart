@@ -154,10 +154,10 @@ class _HomeState extends State<Home> {
       return Container(
         width: 150,
         //color: Colors.red,
-        child: Lottie.asset('assets/images/dislike.json',
-            //width: 100,
-            fit: BoxFit.fitWidth // Replace with your Lottie animation file
-            ),
+        // child: Lottie.asset('assets/images/dislike.json',
+        //     //width: 100,
+        //     fit: BoxFit.fitWidth // Replace with your Lottie animation file
+        //     ),
       );
     } else {
       return Container(); // Return an empty container when display is false

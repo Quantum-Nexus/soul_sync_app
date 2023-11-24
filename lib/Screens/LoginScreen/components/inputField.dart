@@ -47,28 +47,30 @@ class _InputFieldState extends State<InputField> {
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: TextFormField(
             controller: widget.emailcontroller,
-            validator: validateEmail, // Add validator
-            decoration: InputDecoration(
-              hintText: 'Email',
-              fillColor: kSecondaryLightColor,
-              filled: true,
+            validator: validateEmail,
+            cursorColor: kPrimaryLightColor,
+            style: const TextStyle(color: kPrimaryLightColor),
+            decoration: const InputDecoration(
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: kPrimaryLightColor, width: 0.25),
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              border: OutlineInputBorder(),
+              labelText: 'Email',
+              hintText: " example@gmail.com",
+              hintStyle: TextStyle(color: Colors.white38),
+              hintMaxLines: 3,
+              labelStyle: TextStyle(color: kPrimaryLightColor),
               prefixIcon: const Icon(
                 Icons.email,
-                color: kSecondaryColor,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  color: Color(0xffE4E7EB),
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
+                color: kPrimaryLightColor,
+              ), // Hint text color
               enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  color: Color(0xffE4E7EB),
-                ),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderSide: BorderSide(
+                    color: kPrimaryLightColor, width: 0.25), // Border color
               ),
-            ),
+            ), // Add validator
           ),
         ),
         Padding(
@@ -76,20 +78,27 @@ class _InputFieldState extends State<InputField> {
           child: TextFormField(
             controller: widget.passwordcontroller,
             obscureText: passwordVisible,
-            validator: validatePassword, // Add validator
+            validator: validatePassword,
+            cursorColor: kPrimaryLightColor,
+            style: const TextStyle(color: kPrimaryLightColor),
             decoration: InputDecoration(
-              hintText: 'Password',
-              fillColor: kSecondaryLightColor,
-              filled: true,
-              prefixIcon: const Icon(
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: kPrimaryLightColor, width: 0.25),
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              border: OutlineInputBorder(),
+              labelText: 'Password',
+              hintStyle: TextStyle(color: Colors.white38),
+              hintMaxLines: 3,
+              labelStyle: TextStyle(color: kPrimaryLightColor),
+              prefixIcon: Icon(
                 Icons.lock,
-                color: kSecondaryColor,
+                color: kPrimaryLightColor,
               ),
               suffixIcon: IconButton(
-                icon: Icon(passwordVisible
-                    ? Icons.visibility_off
-                    : Icons.visibility),
-                color: kSecondaryColor,
+                icon: Icon(
+                    passwordVisible ? Icons.visibility_off : Icons.visibility),
+                color: kPrimaryLightColor,
                 onPressed: () {
                   setState(
                     () {
@@ -98,19 +107,13 @@ class _InputFieldState extends State<InputField> {
                   );
                 },
               ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  color: Color(0xffE4E7EB),
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
               enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  color: Color(0xffE4E7EB),
-                ),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderSide: BorderSide(
+                    color: kPrimaryLightColor, width: 0.25), // Border color
               ),
-            ),
+            ), // Add validator
+            
           ),
         ),
       ],

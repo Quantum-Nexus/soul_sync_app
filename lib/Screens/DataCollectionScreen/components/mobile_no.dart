@@ -66,7 +66,7 @@ class _MobileNoState extends State<MobileNo> {
               ),
               Padding(
                   padding: EdgeInsets.symmetric(vertical: height * 0.0045),
-                  child: Text("My Mobile", style: kDHeadStyle)),
+                  child: Text("My Mobile", style: kDHead2Style)),
               const Text(
                 "Please enter your valid phone number. We will verify your account. ",
                 style: TextStyle(

@@ -136,32 +136,29 @@ class _SignupScreenState extends State<SignupScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(70.0),
-                child: Text(
-                  'Soul Sync',
-                  style: kLogo1Style,
+              SizedBox(
+                height: 100,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Get on Board', style: kDHead2Style),
+                    Text(
+                      "  Begin Your Soulful Journey Today",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'Rubik Regular',
+                      color: Colors.white54),
+                    ),
+                  ],
                 ),
               ),
-              const Center(
-                  child: Text(
-                'Signup',
-                style: TextStyle(
-                    fontSize: 24,
-                    fontFamily: 'Rubik Medium',
-                    color: kSecondaryLightColor),
-              )),
-              const Center(
-                  child: Padding(
-                padding: EdgeInsets.only(top: 20.0),
-                child: Text(
-                  'Create your Account',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'Rubik Regular',
-                      color: kTextColor),
-                ),
-              )),
+              SizedBox(
+                height: 60,
+              ),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
@@ -172,25 +169,28 @@ class _SignupScreenState extends State<SignupScreen> {
                       width: MediaQuery.of(context).size.width * 0.4,
                       child: TextFormField(
                         controller: firstNameController,
-                        decoration: InputDecoration(
-                          hintText: 'First Name',
-                          fillColor: kSecondaryLightColor,
-                          filled: true,
+                        style: const TextStyle(color: kPrimaryLightColor),
+                        decoration: const InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: kPrimaryLightColor, width: 0.25),
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          border: OutlineInputBorder(),
+                          labelText: "First Name",
+                          hintText: " First Name",
+                          hintStyle: TextStyle(color: Colors.white38),
+                          hintMaxLines: 3,
+                          labelStyle: TextStyle(color: kPrimaryLightColor),
                           prefixIcon: const Icon(
                             Icons.person,
-                            color: kSecondaryColor,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Color(0xffE4E7EB),
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                            color: kPrimaryLightColor,
+                          ), // Hint text color
                           enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Color(0xffE4E7EB),
-                            ),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(
+                                color: kPrimaryLightColor,
+                                width: 0.25), // Border color
                           ),
                         ),
                       ),
@@ -199,27 +199,30 @@ class _SignupScreenState extends State<SignupScreen> {
                       width: MediaQuery.of(context).size.width * 0.4,
                       child: TextFormField(
                         controller: lastNameController,
-                        decoration: InputDecoration(
-                          hintText: 'Last Name',
-                          fillColor: kSecondaryLightColor,
-                          filled: true,
+                        style: const TextStyle(color: kPrimaryLightColor),
+                        decoration: const InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: kPrimaryLightColor, width: 0.25),
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          border: OutlineInputBorder(),
+                          labelText: "Last Name",
+                          hintText: " Last Name",
+                          hintStyle: TextStyle(color: Colors.white38),
+                          hintMaxLines: 3,
+                          labelStyle: TextStyle(color: kPrimaryLightColor),
                           prefixIcon: const Icon(
                             Icons.person,
-                            color: kSecondaryColor,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Color(0xffE4E7EB),
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                            color: kPrimaryLightColor,
+                          ), // Hint text color
                           enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Color(0xffE4E7EB),
-                            ),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(
+                                color: kPrimaryLightColor,
+                                width: 0.25), // Border color
                           ),
-                        ),
+                        ), // Add validator
                       ),
                     ),
                   ],
@@ -238,19 +241,27 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: TextFormField(
                   obscureText: passwordVisible,
                   controller: confirmController,
+                  style: const TextStyle(color: kPrimaryLightColor),
                   decoration: InputDecoration(
-                    hintText: 'Confirm Password',
-                    fillColor: kSecondaryLightColor,
-                    filled: true,
-                    prefixIcon: const Icon(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: kPrimaryLightColor, width: 0.25),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    border: OutlineInputBorder(),
+                    labelText: 'Confirm Password',
+                    hintStyle: TextStyle(color: Colors.white38),
+                    hintMaxLines: 3,
+                    labelStyle: TextStyle(color: kPrimaryLightColor),
+                    prefixIcon: Icon(
                       Icons.lock,
-                      color: kSecondaryColor,
+                      color: kPrimaryLightColor,
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(passwordVisible
                           ? Icons.visibility_off
                           : Icons.visibility),
-                      color: kSecondaryColor,
+                      color: kPrimaryLightColor,
                       onPressed: () {
                         setState(
                           () {
@@ -259,57 +270,43 @@ class _SignupScreenState extends State<SignupScreen> {
                         );
                       },
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color(0xffE4E7EB),
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color(0xffE4E7EB),
-                      ),
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderSide: BorderSide(
+                          color: kPrimaryLightColor,
+                          width: 0.25), // Border color
                     ),
                   ),
                 ),
               ),
               const SizedBox(
-                height: 30,
+                height: 80,
               ),
               GestureDetector(
                 onTap: () {
                   signUp();
                 },
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 30.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        width: 100,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: kSecondaryLightColor,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            'Next',
-                            style: TextStyle(
-                              fontFamily: 'Rubik Regular',
-                              fontSize: 20,
-                              color: kPrimaryColor,
-                            ),
-                          ),
-                        ),
+                child: Container(
+                  width: 300,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: kPrimaryLightColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'Continue',
+                      style: TextStyle(
+                        fontFamily: 'Rubik Regular',
+                        fontSize: 20,
+                        color: Colors.black,
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(50.0),
+                padding: const EdgeInsets.all(40.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -331,8 +328,9 @@ class _SignupScreenState extends State<SignupScreen> {
                         ' Login',
                         style: TextStyle(
                           fontSize: 16,
+                          fontWeight: FontWeight.bold,
                           fontFamily: 'Rubik Medium',
-                          color: Colors.white,
+                          color: kPinkColor,
                         ),
                       ),
                     )

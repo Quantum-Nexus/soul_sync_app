@@ -171,7 +171,7 @@ class _AboutMeState extends State<AboutMe> {
     // }
 
     
-    print(widget.email);
+    
     final url = 'http://localhost:4000/api/v1/auth/sendotp';
     
     try {
@@ -234,14 +234,11 @@ class _AboutMeState extends State<AboutMe> {
     });
   }
 
-  // bool _isProfileValid() {
-  //   return dateOfBirthController.text.isNotEmpty &&
-  //       aboutController.text.isNotEmpty &&
-  //       contactNumberController.text.isNotEmpty &&
-  //       heightController.text.isNotEmpty &&
-  //       instagramUsernameController.text.isNotEmpty &&
-  //       graduationYearController.text.isNotEmpty;
-  // }
+  bool _isProfileValid() {
+    return _instagramId.isNotEmpty &&
+        _about.isNotEmpty &&
+        _pickedImage != null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -334,37 +331,6 @@ class _AboutMeState extends State<AboutMe> {
                           await _showImageSourceDialog(context);
                         },
                       ),
-                      // GestureDetector(
-                      //   onTap: () => _showImageSourceDialog(context),
-                      //   child: AbsorbPointer(
-                      //     absorbing: true,
-                      //     child: TextFormField(
-                      //       enableInteractiveSelection: true,
-                      //       cursorColor: kPrimaryLightColor,
-                      //       style: TextStyle(color: kPrimaryLightColor),
-                      //       decoration: InputDecoration(
-                      //         focusedBorder: OutlineInputBorder(
-                      //           borderSide: BorderSide(
-                      //               color: kPrimaryLightColor, width: 0.25),
-                      //           borderRadius:
-                      //               BorderRadius.all(Radius.circular(10)),
-                      //         ),
-                      //         border: OutlineInputBorder(),
-                      //         labelText: 'Select your image',
-                      //         labelStyle: TextStyle(
-                      //             color:
-                      //                 kPrimaryLightColor), // Hint text color
-                      //         enabledBorder: OutlineInputBorder(
-                      //           borderRadius:
-                      //               BorderRadius.all(Radius.circular(10)),
-                      //           borderSide: BorderSide(
-                      //               color: kPrimaryLightColor,
-                      //               width: 0.25), // Border color
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
                       TextFormField(
                         cursorColor: kPrimaryLightColor,
                         style: const TextStyle(color: kPrimaryLightColor),
@@ -426,8 +392,11 @@ class _AboutMeState extends State<AboutMe> {
             ),
             GestureDetector(
               onTap: () {
+                
                 _toggledataButtonState();
+                if(isPressed){
                 signUpWithProfile();
+                }
               },
               child: Container(
                 alignment: Alignment.center,
