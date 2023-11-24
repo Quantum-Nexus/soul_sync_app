@@ -160,6 +160,22 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
           ListTile(
             leading: Icon(
+              Icons.voice_chat,
+              color: kPinkColor,
+            ),
+            title: Text(
+              'Confession',
+              style: TextStyle(color: Colors.white),
+            ),
+            onTap: () {
+              // Handle drawer item tap for settings
+               // Close the drawer
+              Navigator.pushReplacementNamed(context, '/confession');
+              // Navigate to the settings screen or perform other actions
+            },
+          ),
+          ListTile(
+            leading: Icon(
               Icons.logout,
               color: kPinkColor,
             ),

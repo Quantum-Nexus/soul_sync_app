@@ -56,7 +56,8 @@ class _LoginScreenState extends State<LoginScreen> {
       final user = responseBody['user'];
       final firstName = user['firstName'];
       final lastName = user['lastName'];
-      final gender = user['gender']; // Access the 'firstName' field
+      final gender = user['gender'];
+      final userId = user['_id']; // Access the 'firstName' field
       print(firstName);
 
       final jwtToken = responseBody['token'];
@@ -67,6 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
       prefs.setString('first_name', firstName);
       prefs.setString('last_name', lastName);
       prefs.setString('gender', gender);
+      prefs.setString('userId', userId);
 
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => Home()));

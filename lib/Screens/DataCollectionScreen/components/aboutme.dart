@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,17 +20,17 @@ class AboutMe extends StatefulWidget {
   String confirmPassword;
   int number;
 
-  AboutMe({super.key, 
-  required this.age, 
-  required this.height,
-  required this.gender,
-  required this.firstName,
-  required this.lastName,
-  required this.email,
-  required this.password,
-  required this.confirmPassword,
-  required this.number
-  });
+  AboutMe(
+      {super.key,
+      required this.age,
+      required this.height,
+      required this.gender,
+      required this.firstName,
+      required this.lastName,
+      required this.email,
+      required this.password,
+      required this.confirmPassword,
+      required this.number});
 
   @override
   State<AboutMe> createState() => _AboutMeState();
@@ -88,6 +89,7 @@ class _AboutMeState extends State<AboutMe> {
       });
     }
   }
+
   void _toggledataButtonState() {
     setState(() {
       if (_pickedImage != null && _instagramId != "" && _about != "") {
@@ -100,53 +102,52 @@ class _AboutMeState extends State<AboutMe> {
               backgroundColor: kPinkColor,
             ),
           );
-        } else if (_instagramId == "" && (_pickedImage != null && _about != "")) {
+        } else if (_instagramId == "" &&
+            (_pickedImage != null && _about != "")) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text("Please enter your instagram id."),
               backgroundColor: kPinkColor,
             ),
           );
-        } else if (_about == "" && ( _pickedImage != null && _about != "")){
+        } else if (_about == "" && (_pickedImage != null && _about != "")) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text("Please enter your about."),
               backgroundColor: kPinkColor,
             ),
           );
-        }
-        else if(_instagramId != "" && (_pickedImage == null && _about == "")) {
+        } else if (_instagramId != "" &&
+            (_pickedImage == null && _about == "")) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text("Please select an image and enter your about."),
               backgroundColor: kPinkColor,
             ),
           );
-        }
-        else if(_about != "" && ( _pickedImage == null && _instagramId == "")) {
+        } else if (_about != "" &&
+            (_pickedImage == null && _instagramId == "")) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text("Please select an image and enter your instagram id."),
+              content:
+                  Text("Please select an image and enter your instagram id."),
               backgroundColor: kPinkColor,
             ),
           );
-        }
-        else if(_pickedImage != "" && (_instagramId == 0 && _about == "")) {
+        } else if (_pickedImage != "" && (_instagramId == 0 && _about == "")) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text("Please enter your instagram id and about."),
               backgroundColor: kPinkColor,
             ),
           );
-        }
-        else {
+        } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text("Please enter valid input fields."),
               backgroundColor: kPinkColor,
             ),
           );
-
         }
       }
     });
@@ -156,6 +157,7 @@ class _AboutMeState extends State<AboutMe> {
   }
 
   Future<void> signUpWithProfile() async {
+    print(widget.email);
     setState(() {
       isLoading = true;
     });
@@ -170,62 +172,61 @@ class _AboutMeState extends State<AboutMe> {
     //   return;
     // }
 
-    
-    
     final url = 'http://localhost:4000/api/v1/auth/sendotp';
-    
+
     try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': widget.email,
+        }),
+      );
 
-      final request = http.MultipartRequest('POST', Uri.parse(url));
-    request.fields.addAll({
-      'email': widget.email,
-    });
-  
-    //   if (image != null) {
-    //     var stream = new http.ByteStream(image!.openRead());
-    //   stream.cast();
+      //   if (image != null) {
+      //     var stream = new http.ByteStream(image!.openRead());
+      //   stream.cast();
 
-    //   var length = await image!.length();
-    //   final imageFile = await http.MultipartFile('image',stream,length);
-    //   request.files.add(imageFile);
+      //   var length = await image!.length();
+      //   final imageFile = await http.MultipartFile('image',stream,length);
+      //   request.files.add(imageFile);
 
-    //   var response = await request.send(); 
-    // }
-      final response = await request.send();
+      //   var response = await request.send();
+      // }
+      print(response.statusCode);
       if (response.statusCode == 200) {
-        
         Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => OTPScreen(
-          emailController: widget.email,
-          passwordController: widget.password,
-          confirmController: widget.confirmPassword,
-          firstNameController: widget.firstName,
-          lastNameController: widget.lastName,
-          dateOfBirthController: widget.age.toString(),
-          aboutController: _about,
-          contactNumberController: widget.number.toString(),
-          heightController: widget.height.toString(),
-          instagramUsernameController: _instagramId,
-          graduationYearController: '',
-          image: _pickedImage,
-          selectedGender: widget.gender,
-          )
-    ));
+            builder: (context) => OTPScreen(
+                  emailController: widget.email,
+                  passwordController: widget.password,
+                  confirmController: widget.confirmPassword,
+                  firstNameController: widget.firstName,
+                  lastNameController: widget.lastName,
+                  dateOfBirthController: widget.age.toString(),
+                  aboutController: _about,
+                  contactNumberController: widget.number.toString(),
+                  heightController: widget.height.toString(),
+                  instagramUsernameController: _instagramId,
+                  graduationYearController: '',
+                  image: _pickedImage,
+                  selectedGender: widget.gender,
+                )));
         // Successfully signed up
         // TODO: Navigate to OTPScreen or any other screen as needed
       } else {
-        final responseBody = await response.stream.bytesToString();
+        print("entered else block");
+        final responseBody = response.body;
 
         if (responseBody.contains('message')) {
-        final errorMessage = json.decode(responseBody)['message'];
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage)),
-        );
-      }
+          final errorMessage = json.decode(responseBody)['message'];
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorMessage)),
+          );
+        }
       }
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred. Please try again later.')),
+        SnackBar(content: Text(error.toString())),
       );
     }
 
@@ -235,9 +236,7 @@ class _AboutMeState extends State<AboutMe> {
   }
 
   bool _isProfileValid() {
-    return _instagramId.isNotEmpty &&
-        _about.isNotEmpty &&
-        _pickedImage != null;
+    return _instagramId.isNotEmpty && _about.isNotEmpty && _pickedImage != null;
   }
 
   @override
@@ -258,46 +257,45 @@ class _AboutMeState extends State<AboutMe> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-              padding: EdgeInsets.zero,
-              constraints: BoxConstraints(),
-              color: kPinkColor,
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(Icons.arrow_back_ios_new),
-            ),
-            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "3 ",
-                  style: GoogleFonts.barlow(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold
-                    ),
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: BoxConstraints(),
+                  color: kPinkColor,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.arrow_back_ios_new),
                 ),
-                Text(" OF ", 
-                style: GoogleFonts.barlow(
-                    color: Colors.white54,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold
+                Row(
+                  children: [
+                    Text(
+                      "3 ",
+                      style: GoogleFonts.barlow(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
                     ),
+                    Text(
+                      " OF ",
+                      style: GoogleFonts.barlow(
+                          color: Colors.white54,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "3",
+                      style: GoogleFonts.barlow(
+                          color: Colors.white54,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
                 ),
-                Text("3", 
-                style: GoogleFonts.barlow(
-                    color: Colors.white54,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold
-                    ),
-                )
+                SizedBox()
               ],
             ),
-            SizedBox()
-          ],
-        ),
             Container(
               // height: height *0.065,
               //margin: EdgeInsets.only(top: height * 0.065),
@@ -338,16 +336,14 @@ class _AboutMeState extends State<AboutMe> {
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                                 color: kPrimaryLightColor, width: 0.25),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10)),
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
                           border: OutlineInputBorder(),
                           labelText: 'Instagram ID',
                           labelStyle: TextStyle(
                               color: kPrimaryLightColor), // Hint text color
                           enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10)),
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
                             borderSide: BorderSide(
                                 color: kPrimaryLightColor,
                                 width: 0.25), // Border color
@@ -365,8 +361,7 @@ class _AboutMeState extends State<AboutMe> {
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                                 color: kPrimaryLightColor, width: 0.25),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10)),
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
                           border: OutlineInputBorder(),
                           labelText: 'About',
@@ -376,8 +371,7 @@ class _AboutMeState extends State<AboutMe> {
                           labelStyle: TextStyle(
                               color: kPrimaryLightColor), // Hint text color
                           enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10)),
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
                             borderSide: BorderSide(
                                 color: kPrimaryLightColor,
                                 width: 0.25), // Border color
@@ -392,10 +386,9 @@ class _AboutMeState extends State<AboutMe> {
             ),
             GestureDetector(
               onTap: () {
-                
                 _toggledataButtonState();
-                if(isPressed){
-                signUpWithProfile();
+                if (isPressed) {
+                  signUpWithProfile();
                 }
               },
               child: Container(
