@@ -1,11 +1,11 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/state_manager.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:soul_sync_app/controllers/confession_controller.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:soul_sync_app/Model/confession.dart';
 import 'package:soul_sync_app/utils/constants/color.dart';
-
-import '../../controllers/confession_upvote_controller.dart';
+import 'package:soul_sync_app/utils/constants/loader.dart';
 
 class ConfessionFeedScreen extends StatefulWidget {
   @override
@@ -13,26 +13,90 @@ class ConfessionFeedScreen extends StatefulWidget {
 }
 
 class _ConfessionFeedScreenState extends State<ConfessionFeedScreen> {
-  final confessionController = Get.put(ConfessionController());
+  List<Confession> confessions = [];
 
-  final upvoteController = Get.put(ConfessionUpvoteController());
-
-  // Create a TextEditingController
   final TextEditingController _textController = TextEditingController();
 
   @override
   void dispose() {
-    // Dispose of the controller when no longer needed to prevent memory leaks
     _textController.dispose();
     super.dispose();
   }
 
-  // Function to show the pop-up dialog
+  Future<void> submitConfession(String confessionText) async {
+    final prefs = await SharedPreferences.getInstance();
+    String userId = prefs.getString('userId') ?? '';
+    String token = prefs.getString('jwt_token') ?? '';
+    print(userId);
+    print(confessionText);
+    String _errorText = '';
+    //final url = 'http://localhost:4000/api/v1/addconfession'; // Replace with your API endpoint
+
+    final Map<String, String> headers = {
+  'Content-Type': 'application/json', // Check if this is the correct content type
+  // Add any other headers if required
+};
+
+final Map<String, dynamic> requestBody = {
+  'message': confessionText,
+  'userId': userId,
+  'token': token
+};
+
+try {
+  final response = await http.post(
+    Uri.parse('http://localhost:4000/api/v1/addconfession'),
+    headers: headers,
+    body: jsonEncode(requestBody),
+  );
+  print('Response Status Code: ${response.statusCode}');
+  print('Response Body: ${response.body}');
+  if (response.statusCode == 201) {
+    // Confession submitted successfully
+    _textController.clear();
+    setState(() {
+      fetchConfessions();
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Confession added Successfully"),
+      ),
+    );
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Confession not sent"),
+      ),
+    );
+  }
+} catch (error) {
+  // Handle network errors
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(error.toString()),
+    ),
+  );
+}
+
+  }
+
+  Future<List<Confession>> fetchConfessions() async {
+    final url =
+        'http://localhost:4000/api/v1/allconfession'; // Replace with your API endpoint
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      return data.map((confession) => Confession.fromJson(confession)).toList();
+    } else {
+      throw Exception('Failed to load confessions');
+    }
+  }
+
   Future<void> _showConfessionDialog(BuildContext context) async {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        // Content of the pop-up dialog
         return AlertDialog(
           title: Text("Write a Confession"),
           content: TextField(
@@ -52,9 +116,9 @@ class _ConfessionFeedScreenState extends State<ConfessionFeedScreen> {
             TextButton(
               child: Text("Submit"),
               onPressed: () {
-                String confessiontxt = _textController.text;
-                confessionController.addConfession(confessiontxt);
-                Navigator.of(context).pop(); 
+                String confessiontxt = _textController.text.trim();
+                submitConfession(confessiontxt);
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -71,78 +135,82 @@ class _ConfessionFeedScreenState extends State<ConfessionFeedScreen> {
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
-        // height: height,
+        margin: const EdgeInsets.only(left: 20,right: 20, top: 50 //vertical: 50
+        ),
         width: width,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text.rich(
               TextSpan(
-                  text: 'Your ',
-                  style: GoogleFonts.urbanist(
-                    fontSize: height * 0.042,
-                    fontWeight: FontWeight.bold,
-                    color: kPrimaryLightColor,
+                text: 'Your ',
+                style: TextStyle(
+                  fontSize: height * 0.042,
+                  fontWeight: FontWeight.bold,
+                  color: kPrimaryLightColor,
+                ),
+                children: <InlineSpan>[
+                  TextSpan(
+                    text: 'secrets ',
+                    style: TextStyle(
+                      fontSize: height * 0.042,
+                      fontWeight: FontWeight.bold,
+                      color: kPinkColor,
+                    ),
                   ),
-                  children: <InlineSpan>[
-                    TextSpan(
-                      text: 'secrets ',
-                      style: GoogleFonts.urbanist(
-                        // height: 2,
-                        fontSize: height * 0.042,
-                        fontWeight: FontWeight.bold,
-                        color: kPinkColor,
-                      ),
+                  TextSpan(
+                    text: 'are safe with us!',
+                    style: TextStyle(
+                      fontSize: height * 0.042,
+                      fontWeight: FontWeight.bold,
+                      color: kPrimaryLightColor,
                     ),
-                    TextSpan(
-                      text: 'are safe with us!',
-                      style: GoogleFonts.urbanist(
-                        fontSize: height * 0.042,
-                        fontWeight: FontWeight.bold,
-                        color: kPrimaryLightColor,
-                      ),
-                    ),
-                  ]),
+                  ),
+                ],
+              ),
             ),
             Text(
               'Send your anonymous confessions',
               style: TextStyle(
                   color: kPrimaryLightColor, fontSize: height * 0.018),
             ),
-            Expanded(child: GetX<ConfessionController>(builder: (controller) {
-              return ListView.builder(
-                  itemCount: controller.confessions.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      color: index.isEven ? kPinkColor : kYellowColor,
-                      margin: EdgeInsets.symmetric(vertical: 12.0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${controller.confessions[index].confessiontxt}',
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: index.isEven
-                                    ? kPrimaryLightColor
-                                    : kPrimaryColor,
-                              ),
-                            ),
-                            Divider(
-                              // indent: width*0.05,
-                              // endIndent: width*0.05,
-                              color: index.isEven
-                                  ? kPrimaryLightColor
-                                  : kPrimaryColor,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Expanded(
+              child: FutureBuilder<List<Confession>>(
+                future: fetchConfessions(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return customLoader();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    List<Confession> confessions = snapshot.data ?? [];
+                    return ListView.builder(
+                      itemCount: confessions.length,
+                      itemBuilder: (context, index) {
+                            final confession = confessions[index];
+      final date = DateTime.parse(confession.date); // Assuming date is in ISO 8601 format
+
+      String formattedDate;
+      final now = DateTime.now();
+      final difference = now.difference(date);
+      if (difference.inDays >= 1) {
+        final daysAgo = difference.inDays;
+        formattedDate = '$daysAgo ${daysAgo == 1 ? 'day' : 'days'} ago';
+      } else if (difference.inHours >= 1) {
+        formattedDate = '${difference.inHours} hours ago';
+      } else {
+        formattedDate = '${difference.inMinutes} minutes ago';
+      }
+                        return Card(
+                          color: index.isEven ? kPinkColor : kYellowColor,
+                          margin: EdgeInsets.symmetric(vertical: 12.0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${controller.confessions[index].date}',
+                                  '${confessions[index].confessiontxt}',
                                   style: TextStyle(
                                     fontSize: 20,
                                     color: index.isEven
@@ -150,48 +218,36 @@ class _ConfessionFeedScreenState extends State<ConfessionFeedScreen> {
                                         : kPrimaryColor,
                                   ),
                                 ),
-                                GetX<ConfessionUpvoteController>(
-                                    builder: (upvoteController) {
-                                  String upvotesForConfession = upvoteController
-                                      .calculateTotalUpvotes(
-                                          controller.confessions[index])
-                                      .toString();
-                                  return Row(
-                                    children: [
-                                      Text(
-                                        '$upvotesForConfession',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          color: index.isEven
-                                              ? kPrimaryLightColor
-                                              : kPrimaryColor,
-                                        ),
-                                      ),
-                                      IconButton(
-                                        icon: Icon(Icons.arrow_upward_outlined),
+                                Divider(
+                                  color: index.isEven
+                                      ? kPrimaryLightColor
+                                      : kPrimaryColor,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      formattedDate,
+                                      style: TextStyle(
+                                        fontSize: 20,
                                         color: index.isEven
                                             ? kPrimaryLightColor
                                             : kPrimaryColor,
-                                        onPressed: () {
-                                          // Increment the upvote count
-                                          upvoteController.upvoteConfession(
-                                              controller.confessions[index]);
-
-                                          // Trigger immediate UI update
-                                          controller.update();
-                                        },
                                       ),
-                                    ],
-                                  );
-                                })
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
-                          ],
-                        ),
-                      ),
+                          ),
+                        );
+                      },
                     );
-                  });
-            })),
+                  }
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -201,7 +257,6 @@ class _ConfessionFeedScreenState extends State<ConfessionFeedScreen> {
         isExtended: true,
         backgroundColor: kPrimaryLightColor,
         onPressed: () {
-          // Call the function to show the pop-up dialog
           _showConfessionDialog(context);
         },
         child: const Icon(
